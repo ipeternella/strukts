@@ -5,9 +5,13 @@
 
 int main()
 {
-    SinglyNode *first_node = singly_node_new(5, NULL);
+    SinglyLinkedList *list = singly_linked_list_new();
 
-    printf("First node: %d", first_node->value);
+    printf("size: %d\n", list->size);
+
+    insert(10, list);
+
+    printf("size: %d, first_value: %d\n", list->size, list->first_node->value);
 
     return EXIT_SUCCESS;
 }

@@ -15,18 +15,36 @@
  */
 typedef struct _SinglyNode SinglyNode;
 
+/**
+ * A singly linked list.
+ */
+typedef struct _SinglyLinkedList SinglyLinkedList;
+
 struct _SinglyNode
 {
     int value;
     SinglyNode *next;
 };
 
+struct _SinglyLinkedList
+{
+    int size;
+    SinglyNode *first_node;
+};
+
 /**
- * Allocates a new node to be used in a singly linked list.
+ * Allocates a new empty singly linked list.
+ * 
+ * @return a pointer to an empty linked list.
+ */
+SinglyLinkedList *singly_linked_list_new();
+
+/**
+ * Allocates a new node and inserts it at the beginning of a singly linked list.
  * 
  * @param value is the value which this node will hold in the list.
- * @return a pointer to a new node or NULL if allocation was not successful.
+ * @param list is the linked list to have the new node added to its beginning.
  */
-SinglyNode *singly_node_new(int value, SinglyNode *next);
+void insert(int value, SinglyLinkedList *list);
 
 #endif /* __STRUKTS_LINKED_LISTS_H */
