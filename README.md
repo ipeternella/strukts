@@ -1,2 +1,3 @@
 # strukts
-Data struktures and algorithms implemented in GO.
+
+Data struktures and algorithms implemented in C.
