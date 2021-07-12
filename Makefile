@@ -5,7 +5,7 @@ CCP := g++
 LIB := -Llib # directories for looking for compiled libs (passed to the linker)
 INC := -Iinclude -Isrc # directories for looking for header files in preprocessing
 
-CFLAGS := -Wall -Wextra -v
+CFLAGS := -Wall -Wextra
 CCPFLAGS := -Wall -Wextra -std=c++11 -lgtest -lgtest_main
 
 # src folders
