@@ -13,7 +13,8 @@
 typedef void (*UnitTest)(void);
 
 /**
- * Runs a list of unit tests.
+ * Runs an array of unit tests. Accepts an array of UnitTest functions due to
+ * array decaying.
  */
 void run(UnitTest *tests);
 

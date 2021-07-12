@@ -6,6 +6,7 @@
 
 # variables
 GCC := gcc
+THIS_DIR := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
 
 MAIN_FILE := main.c
 BIN_OUTPUT_NAME := main
@@ -30,9 +31,9 @@ run: compile
 
 test:
 	@mkdir -p ${TEST_DIST_FOLDER}  # creates if doesn't exist
-	@${GCC} ${TEST_FOLDER}/*.c \
+	@${GCC} ${TEST_FOLDER}/test_linked_lists.c ${TEST_FOLDER}/test_runner.c ${SRC_FOLDER}/linked_lists.c -Isrc \
 		-o ${TEST_DIST_FOLDER}/${TEST_BIN_OUTPUT_NAME} \
-		-Wall -Wextra -Wundef -Wunreachable-code 
+		-Wall -Wextra -Wundef -Wunreachable-code
 
 	@./${TEST_DIST_FOLDER}/${TEST_BIN_OUTPUT_NAME} || rm -rf ${TEST_DIST_FOLDER}
 	@rm -rf ${TEST_DIST_FOLDER}

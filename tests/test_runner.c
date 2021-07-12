@@ -9,6 +9,8 @@ void run(UnitTest *tests)
     // tests lists always end with a final NULL element
     for (int i = 0; tests[i] != NULL; i++)
     {
-        tests[i]();
+        UnitTest test = tests[i];
+
+        test();
     }
 }
