@@ -1,10 +1,8 @@
-#include "linked_lists.h"
 #include "gtest/gtest.h"
+#include "linked_lists.h"
 
-namespace
-{
-    TEST(LINKED_LISTS_SUITE, CREATE_LINKED_LIST)
-    {
+namespace {
+    TEST(LINKED_LISTS_SUITE, CREATE_LINKED_LIST) {
         // arrange & act
         SinglyLinkedList *list = singly_linked_list_new();
 
@@ -19,4 +17,5 @@ namespace
         EXPECT_EQ(list->first_node->value, 20);
         EXPECT_EQ(list->size, 2);
     }
-}
+
+}  // namespace

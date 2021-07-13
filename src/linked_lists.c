@@ -1,13 +1,12 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include "linked_lists.h"
 
-SinglyLinkedList *singly_linked_list_new()
-{
+#include <stdio.h>
+#include <stdlib.h>
+
+SinglyLinkedList *singly_linked_list_new() {
     SinglyLinkedList *list = (SinglyLinkedList *)malloc(sizeof(SinglyLinkedList));
 
-    if (list == NULL)
-    {
+    if (list == NULL) {
         printf("Unable to allocate memory for the linked list node.\n");
         exit(EXIT_FAILURE);
     }
@@ -18,13 +17,11 @@ SinglyLinkedList *singly_linked_list_new()
     return list;
 }
 
-void insert(int value, SinglyLinkedList *list)
-{
+void insert(int value, SinglyLinkedList *list) {
     // allocates a new node
     SinglyNode *new_node = (SinglyNode *)malloc(sizeof(SinglyNode));
 
-    if (new_node == NULL)
-    {
+    if (new_node == NULL) {
         printf("Unable to allocate memory for a singly node.\n");
         exit(EXIT_FAILURE);
     }

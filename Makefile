@@ -3,7 +3,7 @@ CC := gcc
 CCP := g++
 
 LIB := -Llib # directories for looking for compiled libs (passed to the linker)
-INC := -Iinclude/internal -Iinclude # directories for looking for header files in preprocessing
+INC := -Iinclude/internal/vendor -Iinclude # directories for looking for header files in preprocessing
 
 CFLAGS := -g -Wall -Wextra
 CCPFLAGS := -Wall -Wextra -std=c++11 -lgtest -lgtest_main  # 3rd party libs specification with -l for the linker

@@ -1,2 +1,2 @@
-include/internal/gmock/* linguist-documentation
-include/internal/gtest/* linguist-documentation
+include/internal/gmock/* linguist-vendored
+include/internal/gtest/* linguist-vendored
