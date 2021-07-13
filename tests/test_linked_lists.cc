@@ -17,5 +17,4 @@ namespace {
         EXPECT_EQ(list->first_node->value, 20);
         EXPECT_EQ(list->size, 2);
     }
-
 }  // namespace
