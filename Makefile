@@ -3,40 +3,39 @@ CC := gcc
 CCP := g++
 
 LIB := -Llib # directories for looking for compiled libs (passed to the linker)
-INC := -Iinclude -Isrc # directories for looking for header files in preprocessing
+INC := -Iinclude/internal -Iinclude # directories for looking for header files in preprocessing
 
-CFLAGS := -Wall -Wextra
-CCPFLAGS := -Wall -Wextra -std=c++11 -lgtest -lgtest_main
+CFLAGS := -g -Wall -Wextra
+CCPFLAGS := -Wall -Wextra -std=c++11 -lgtest -lgtest_main  # 3rd party libs specification with -l for the linker
 
 # src folders
 SRC_FOLDER := src
 TEST_FOLDER := tests
 
-# dist/build folders
-DIST_FOLDER := dist
+# dist/build folders for compiled code
+DIST_FOLDER := build
 TEST_DIST_FOLDER := tmp
 
 # bin output names
-BIN_OUTPUT_NAME := main
-TEST_BIN_OUTPUT_NAME := tests
+BIN_OUTPUT_NAME := libstrukts
+TEST_BIN_OUTPUT_NAME := teststrukts
 
-main: compile run
+main: compile
 
 compile:
-	@tput setaf 3; echo "🔨 Compiling code..."
+	@tput setaf 3; echo "🔨 Compiling shared lib..."
 	@mkdir -p $(DIST_FOLDER)
 
-	@$(CC) $(CFLAGS) $(INC) $(LIB) $(SRC_FOLDER)/*.c -o $(DIST_FOLDER)/$(BIN_OUTPUT_NAME)
-	@echo "🔨 Compilation successful...";
-
-run: compile
-	@echo "🔨 Running..."; tput init
-	@./$(DIST_FOLDER)/$(BIN_OUTPUT_NAME)
+	@$(CC) $(CFLAGS) $(INC) -c $(SRC_FOLDER)/*.c  # compiles without linking
+	@$(CC) $(CFLAGS) -shared -fPIC -o $(DIST_FOLDER)/libstrukts.so *.o
+	@echo "🔨 Compilation successful!";
 
 test:
 	@tput setaf 3; echo "🔨 Compiling tests..."
 	@mkdir -p $(TEST_DIST_FOLDER)
-	@$(CCP) $(INC) $(LIB) $(CCPFLAGS) $(TEST_FOLDER)/*.cc -o $(TEST_DIST_FOLDER)/$(TEST_BIN_OUTPUT_NAME)
+
+	@$(CCP) $(INC) $(LIB) $(CCPFLAGS) $(TEST_FOLDER)/*.cc $(SRC_FOLDER)/*.c \
+		-o $(TEST_DIST_FOLDER)/$(TEST_BIN_OUTPUT_NAME)
 
 	@echo "🔨 Running tests..."
 	@./$(TEST_DIST_FOLDER)/$(TEST_BIN_OUTPUT_NAME) || rm -rf $(TEST_DIST_FOLDER)
