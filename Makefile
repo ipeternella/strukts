@@ -5,7 +5,7 @@ CCP := g++
 LIB := -Llib # directories for looking for compiled libs (passed to the linker)
 INC := -Iinclude/internal/vendor -Iinclude # directories for looking for header files in preprocessing
 
-CFLAGS := -g -Wall -Wextra
+CFLAGS := -g -Wall -Wextra -c -fpic  # pic mode without linking for shared lib
 CCPFLAGS := -Wall -Wextra -std=c++11 -lgtest -lgtest_main  # 3rd party libs specification with -l for the linker
 
 # src folders
@@ -23,11 +23,16 @@ TEST_BIN_OUTPUT_NAME := teststrukts
 main: compile
 
 compile:
-	@tput setaf 3; echo "🔨 Compiling shared lib..."
 	@mkdir -p $(DIST_FOLDER)
 
-	@$(CC) $(CFLAGS) $(INC) -c $(SRC_FOLDER)/*.c  # compiles without linking
-	@$(CC) $(CFLAGS) -shared -fPIC -o $(DIST_FOLDER)/libstrukts.so *.o
+	@tput setaf 3; echo "🔨 Compiling shared lib in pic mode..."
+	@$(CC) $(CFLAGS) $(INC) $(SRC_FOLDER)/*.c # compiles without linking
+	@mv *.o $(DIST_FOLDER)
+
+	@echo "🔨 Producing final shared object..."
+	@$(CC) -shared -o $(DIST_FOLDER)/libstrukts.so $(DIST_FOLDER)/*.o
+
+	@rm -f $(DIST_FOLDER)/*.o
 	@echo "🔨 Compilation successful!";
 
 test:
