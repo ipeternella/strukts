@@ -10,11 +10,32 @@ namespace {
         EXPECT_EQ(list->size, 0);
 
         // act
-        insert(10, list);
-        insert(20, list);
+        insert_first(10, list);
+        insert_first(20, list);
 
         // assert
         EXPECT_EQ(list->first_node->value, 20);
         EXPECT_EQ(list->size, 2);
+
+        // act
+        remove_first(list);
+
+        // assert
+        EXPECT_EQ(list->size, 1);
+        EXPECT_EQ(list->first_node->value, 10);
+
+        // act
+        remove_first(list);
+
+        // assert
+        EXPECT_EQ(list->size, 0);
+        EXPECT_TRUE(list->first_node == nullptr);
+
+        // act (empty list)
+        remove_first(list);
+
+        // assert
+        EXPECT_EQ(list->size, 0);
+        EXPECT_TRUE(list->first_node == nullptr);
     }
 }  // namespace

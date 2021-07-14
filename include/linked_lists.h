@@ -43,6 +43,13 @@ SinglyLinkedList *singly_linked_list_new();
  * @param value is the value which this node will hold in the list.
  * @param list is the linked list to have the new node added to its beginning.
  */
-void insert(int value, SinglyLinkedList *list);
+void insert_first(int value, SinglyLinkedList *list);
+
+/**
+ * Removes the first node from the beginning of a singly linked list.
+ *
+ * @param list is the linked list which will have the first node removed.
+ */
+void remove_first(SinglyLinkedList *list);
 
 #endif /* __STRUKTS_LINKED_LISTS_H */
