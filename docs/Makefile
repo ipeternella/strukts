@@ -1,12 +1,12 @@
 ROOT_DIR := $(dir $(abspath $(firstword $(MAKEFILE_LIST))))
 CC := gcc
-CCP := g++
+CPP := g++
 
 LIB := -Llib # directories for looking for compiled libs (passed to the linker)
 INC := -Iinclude/internal/vendor -Iinclude # directories for looking for header files in preprocessing
 
 CFLAGS := -g -Wall -Wextra -c -fpic  # pic mode without linking for shared lib
-CCPFLAGS := -Wall -Wextra -std=c++11 -lgtest -lgtest_main -Wno-deprecated # 3rd party libs specification with -l for the linker
+CPPFLAGS := -Wall -Wextra -std=c++11 -lgtest -lgtest_main -Wno-deprecated # 3rd party libs specification with -l for the linker
 
 # src folders
 SRC_FOLDER := src
@@ -42,7 +42,7 @@ test:
 	tput setaf 3; echo "🔨 Compiling tests..."
 	mkdir -p $(TEST_DIST_FOLDER)
 
-	$(CCP) $(INC) $(LIB) $(CCPFLAGS) $(TEST_FOLDER)/*.cc $(SRC_FOLDER)/*.c \
+	$(CPP) $(INC) $(LIB) $(CPPFLAGS) $(TEST_FOLDER)/*.cpp $(SRC_FOLDER)/*.c \
 		-o $(TEST_DIST_FOLDER)/$(TEST_BIN_OUTPUT_NAME)
 
 	echo "🔨 Running tests..."

@@ -2,7 +2,7 @@
 
 Data struktures and algorithms implemented in C.
 
-## Compiling shared lib
+## Compiling statically linked library
 
 ```sh
 make
