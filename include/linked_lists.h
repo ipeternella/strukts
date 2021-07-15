@@ -10,6 +10,10 @@
 #ifndef __STRUKTS_LINKED_LISTS_H
 #define __STRUKTS_LINKED_LISTS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * A node to be used in a singly linked list.
  */
@@ -52,4 +56,7 @@ void insert_first(int value, SinglyLinkedList *list);
  */
 void remove_first(SinglyLinkedList *list);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __STRUKTS_LINKED_LISTS_H */
