@@ -44,14 +44,3 @@ The test binaries can be found in `./build/bin/test` which can be used to rerun 
 
 `PS`: When any piece of code changes, running the aforementioned command will compile and run the tests again without
 downloading external dependencies (faster).
-
-<style>
-img
-{
-    display:block; 
-    float:none; 
-    margin-left:auto;
-    margin-right:auto;
-    width:60%;
-}
-</style>
