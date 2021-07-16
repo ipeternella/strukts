@@ -1,6 +1,6 @@
 <h1 align="center">Strukts</h1>
 
-<p align="center>
+<p align="center">
     <img src="/IgooorGP/strukts/raw/main/docs/strukts.png" alt="Strukts" style="max-width:100%;">
 </p>
 
