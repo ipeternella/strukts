@@ -1,4 +1,7 @@
-<h1 align="center">Strukts: data structures lib written in C</h1>
+<h1 align="center">Strukts!</h1>
+<img alt="C" src="https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white"/>
+<img alt="C++" src="https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white"/>
+<img alt="CMake" src="https://img.shields.io/badge/CMake-%23008FBA.svg?style=for-the-badge&logo=cmake&logoColor=white"/>
 
 <br clear="left"/><p align="center"> ![Strukts](docs/strukts.png) </p>
 
