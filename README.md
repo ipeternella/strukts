@@ -13,6 +13,7 @@
 ## Table of Contents
 
 - [Strukts](#Strukts)
+  - [Objective](#Objective)
   - [Requirements](#Requirements)
   - [Dependencies](#Dependencies)
 - [Compiling Strukts](#Compiling-Strukts)
@@ -20,8 +21,13 @@
 
 ## Strukts
 
+### Objective
+
 Strukts is a C library with a few useful data structures that can be reused in other C projects. It's main distribution contains
-a static lib, `libstrukts.a` that can be statically linked to other C projects. Moreover, Strukts headers on the [include](include/strukts) folder.
+a static lib, `libstrukts.a` that can be statically linked to other C projects. As such, Strukts headers can be found at the [include](include/strukts)
+folder so that this library can be included in other projects.
+
+This project is a training ground for exercising some classical algorithms and data structures implementations.
 
 ### Requirements
 
@@ -38,7 +44,7 @@ Strukts depends on the following third-party libraries:
 - `GoogleTest` library for tests
 - `GoogleMock` library for tests
 
-CMake downloads, compiles and links these dependencies automatically when building Strukts.
+Don't worry: this repo's CMake file downloads, compiles and links these dependencies automatically when building the lib tests.
 
 ## Compiling Strukts
 
