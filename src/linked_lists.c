@@ -1,5 +1,6 @@
 #include "linked_lists.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -46,4 +47,33 @@ void remove_first(SinglyLinkedList *list) {
 
         free(first);
     }
+}
+
+bool contains(int value, SinglyLinkedList *list) {
+    if (list->size == 0) return NULL;
+
+    SinglyNode *current_node = list->first_node;
+
+    while (current_node != NULL) {
+        if (current_node->value == value) return true;
+
+        current_node = current_node->next;  // may be NULL
+    }
+
+    return false;
+}
+
+void singly_linked_list_free(SinglyLinkedList *list) {
+    SinglyNode *current_node = list->first_node;
+
+    while (current_node != NULL) {
+        SinglyNode *next_node = current_node->next;  // becomes NULL if current_node is the last one
+
+        // deallocate current_node's heap memory
+        free(current_node);
+
+        current_node = next_node;
+    }
+
+    free(list);
 }

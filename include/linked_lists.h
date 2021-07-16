@@ -14,6 +14,8 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
+
 /**
  * A node to be used in a singly linked list.
  */
@@ -55,6 +57,22 @@ void insert_first(int value, SinglyLinkedList *list);
  * @param list is the linked list which will have the first node removed.
  */
 void remove_first(SinglyLinkedList *list);
+
+/**
+ * Traverses the linked list trying to find a value.
+ *
+ * @param value is the value to be searched in the linked list.
+ * @param list is the searched linked list.
+ * @return true if the value is in the list; otherwise, false.
+ */
+bool contains(int value, SinglyLinkedList *list);
+
+/**
+ * Deallocates all memory previously allocated by all nodes in the linked list.
+ *
+ * @param list is the searched linked list.
+ */
+void singly_linked_list_free(SinglyLinkedList *list);
 
 #ifdef __cplusplus
 }
