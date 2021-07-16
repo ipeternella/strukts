@@ -1,8 +1,8 @@
 <h1 align="center">Strukts</h1>
 
-<h3 align="center">C library with some data structures and algorithms.</h3>
-
 ![Strukts](docs/strukts.png)
+
+<h3 align="center">C library with some data structures and algorithms.</h3>
 
 ## Compiling the statically linked library
 
@@ -42,3 +42,12 @@ The test binaries can be found in `./build/bin/test` which can be used to rerun 
 
 `PS`: When any piece of code changes, running the aforementioned command will compile and run the tests again without
 downloading external dependencies (faster).
+
+<style>
+img
+{
+    display:block; 
+    margin-left:auto;
+    margin-right:auto;
+}
+</style>
