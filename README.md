@@ -1,6 +1,6 @@
-<br clear="left"/><p align="center"> ![Strukts](docs/strukts.png) </p>
+<h1 align="center">Strukts</h1>
 
-<h2 align="center">C library with some data structures and algorithms.</h2>
+<br clear="left"/><p align="center"> ![Strukts](docs/strukts.png) </p>
 
 ## Table of Contents
 
@@ -12,7 +12,7 @@
 
 ## Strukts
 
-Strukts is a library with a few useful data structures that can be reused in other C projects. It's main distribution contains
+Strukts is a C library with a few useful data structures that can be reused in other C projects. It's main distribution contains
 a static lib, `libstrukts.a` that can be statically linked to other C projects. Moreover, Strukts headers on the [include](include/strukts) folder.
 
 ### Requirements
