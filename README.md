@@ -1,6 +1,6 @@
-# strukts
+<h1 align="center">Strukts</h1>
 
-Data struktures and algorithms implemented in C.
+<h3 align="center">C library with some data structures and algorithms.</h3>
 
 ![Strukts](docs/strukts.png)
 
