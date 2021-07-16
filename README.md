@@ -3,12 +3,10 @@
 <p align="left">
   <img alt="C" src="https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white"/>
   <img alt="C++" src="https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white"/>
-  <img alt="CMake" src="https://img.shields.io/badge/CMake-%23008FBA.svg?style=for-the-badge&logo=cmake&logoColor=white"/>
+  <img alt="CMake" src="https://img.shields.io/badge/CMake-%23008FBA.svg?style=for-the-badge&logo=cmakelogoColor=white">
 </p>
 
-<p align="center">
-  <img src="docs/strukts.png">
-</p>
+<p align="center"><img src="docs/strukts.png"></p>
 
 ## Table of Contents
 
@@ -23,11 +21,9 @@
 
 ### Objective
 
-Strukts is a C library with a few useful data structures that can be reused in other C projects. It's main distribution contains
-a static lib, `libstrukts.a` that can be statically linked to other C projects. As such, Strukts headers can be found at the [include](include/strukts)
-folder so that this library can be included in other projects.
+Strukts is a C library with a few useful data structures/algorithms that can be reused in other C projects. It's main distribution contains a static lib, `libstrukts.a`, that can be statically linked to other C projects like the GNU linker [ld](https://ftp.gnu.org/old-gnu/Manuals/ld-2.9.1/html_mono/ld.html).
 
-This project is a training ground for exercising some classical algorithms and data structures implementations.
+Finally, this project is a training ground for exercising some classical algorithms and data structures implementations.
 
 ### Requirements
 
@@ -60,10 +56,8 @@ Then, compile the project with `CMake`:
 cmake .. && make
 ```
 
-The compiled static library can be found at `build/lib/libstrukts.a`. After that:
-
-- This static lib can be linked to your own project;
-- The headers of this lib can be found at `include/strukts`
+After this, the compiled static library will be at `build/lib/libstrukts.a`. This file can be statically linked
+to your C project. Moreover, in order to use Struks's functions definitions, the library headers can be found at the repo's [include](include/strukts) folder.
 
 ## Compiling Tests
 
