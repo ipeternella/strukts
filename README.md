@@ -1,4 +1,4 @@
-<h1 align="center">Strukts</h1>
+<h1 align="center">Strukts: data structures lib written in C</h1>
 
 <br clear="left"/><p align="center"> ![Strukts](docs/strukts.png) </p>
 
