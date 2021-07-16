@@ -10,6 +10,8 @@
   <img src="docs/strukts.png">
 </p>
 
+<h2 align="center">Data structures library written in C</h2>
+
 ## Table of Contents
 
 - [Strukts](#Strukts)
