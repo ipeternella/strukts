@@ -1,10 +1,8 @@
 <h1 align="center">Strukts</h1>
 
-<p align="center">
-    <img src="/IgooorGP/strukts/raw/main/docs/strukts.png" alt="Strukts" style="max-width:100%;">
-</p>
-
 <h3 align="center">C library with some data structures and algorithms.</h3>
+
+<br clear="left"/><p align="center"> ![Strukts](docs/strukts.png) </p>
 
 ## Compiling the statically linked library
 
