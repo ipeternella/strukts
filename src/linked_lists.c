@@ -4,6 +4,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "sfmalloc.h"
+
+#define malloc sf_malloc
+#define free sf_free
+
 SinglyLinkedList *singly_linked_list_new() {
     SinglyLinkedList *list = (SinglyLinkedList *)malloc(sizeof(SinglyLinkedList));
 
