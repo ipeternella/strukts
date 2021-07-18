@@ -12,6 +12,7 @@
 
 - [Strukts](#Strukts)
   - [Objective](#Objective)
+  - [Memory Safety](#Memory-Safety)
   - [Requirements](#Requirements)
   - [Dependencies](#Dependencies)
 - [Compiling Strukts](#Compiling-Strukts)
@@ -25,6 +26,21 @@ Strukts is a C library with a few useful data structures/algorithms that can be 
 
 Finally, this project is a training ground for exercising some classical algorithms and data structures implementations.
 
+### Memory Safety
+
+Strukts uses an external lib called [safemalloc](https://github.com/Theldus/safemalloc) that is used to provide some degree of memory safety as `safemalloc` warns, during tests, if there are memory leaks (memory that should have been deallocated but was not) and other memory problems.
+
+As an example, if we comment out the last `free()` invocation inside the function [singly_linked_list_free](src/linked_lists.c) that is responsible for releasing all the allocated heap memory of a singly linked list, then once we run the tests we should see the following warning:
+
+```sh
+Memory leaks were found during execution, please check below and fix.
+----------------------------------------------------------------------
+- Address 0x7fdabfc064e0 (16 bytes) not freed!
+  -> Allocated at [.../src/linked_lists.c:13] singly_linked_list_new()
+```
+
+Which is very useful to make sure that implementations are handling memory management in a proper way.
+
 ### Requirements
 
 In order to compile Strukts and its tests, it's necessary to have:
@@ -37,10 +53,10 @@ In order to compile Strukts and its tests, it's necessary to have:
 
 Strukts depends on the following third-party libraries:
 
-- `GoogleTest` library for tests
-- `GoogleMock` library for tests
+- [safemalloc](https://github.com/Theldus/safemalloc) for memory safety (warnings about memory leaks, etc.)
+- [googletest](https://github.com/google/googletest) library for running tests
 
-Don't worry: this repo's CMake file downloads, compiles and links these dependencies automatically when building the lib tests.
+Don't worry: this repo's CMake file downloads, compiles and links these dependencies automatically when building the lib and its tests.
 
 ## Compiling Strukts
 
