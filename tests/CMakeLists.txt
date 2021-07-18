@@ -1,6 +1,6 @@
 # Include CMake's external modules
 include(GoogleTest)
-include(ExternalProject)
+include(FetchContent)
 
 enable_testing()
 
@@ -11,29 +11,25 @@ file(GLOB strukts_src_files ${Strukts_SOURCE_DIR}/src/*.c)
 # CXX compiler flags
 set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra")
 
-# download external dependencies
-ExternalProject_Add(googletest
+# dependency: googletest
+FetchContent_Declare(googletest
     GIT_REPOSITORY https://github.com/google/googletest
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNAL_INSTALL_LOCATION}
+    GIT_TAG         origin/master
 )
 
-# directory for looking for header files ~ g++ -I
-include_directories(
-    ${EXTERNAL_INSTALL_LOCATION}/include # external dependencies headers
-    ${Strukts_SOURCE_DIR}/include/strukts  # lib own headers
-)
+FetchContent_GetProperties(googletest)
+if (NOT googletest_POPULATED)
+    FetchContent_Populate(googletest)
+endif ()
 
-# directory for looking for vendored libs such as gtest ~ g++ -L
-link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
+# build dependency: googletest supports CMake -> compiles to ${googletest_BINARY_DIR} dir
+add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 
 # build final binary
-add_executable(test ${strukts_src_files} ${strukts_test_files})
-
-# dependencies: targets that should run before others
-add_dependencies(test googletest)
+add_executable(test ${strukts_src_files} ${safemalloc_src} ${strukts_test_files})
 
 # links specific libraries to the final binary
-target_link_libraries(test gtest gtest_main)  # -lgtest -lgtest_main
+target_link_libraries(test gtest gtest_main)  # g++ -lgtest -lgtest_main
 
 # adds gtests
 gtest_add_tests(TARGET test)
