@@ -1,14 +1,14 @@
 /**
- * @file linked_lists.h
+ * @file strukts_linkedlist.h
  *
- * @brief Linked lists implementations.
+ * @brief Module that contains linked lists implementations.
  *
  * A singly linked list is a linear data struture that holds a single reference
- * to the next node of the list. To create one @see singly_node_new.
+ * to the next node of the list. To create one @see strukts_linkedlist_new.
  */
 
-#ifndef __STRUKTS_LINKED_LISTS_H
-#define __STRUKTS_LINKED_LISTS_H
+#ifndef STRUKTS_LINKEDLIST_H
+#define STRUKTS_LINKEDLIST_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,21 +19,21 @@ extern "C" {
 /**
  * A node to be used in a singly linked list.
  */
-typedef struct _SinglyNode SinglyNode;
+typedef struct _StruktsSinglyNode StruktsSinglyNode;
 
 /**
- * A singly linked list.
+ * A linked list.
  */
-typedef struct _SinglyLinkedList SinglyLinkedList;
+typedef struct _StruktsLinkedList StruktsLinkedList;
 
-struct _SinglyNode {
-    int value;
-    SinglyNode *next;
+struct _StruktsLinkedList {
+    int size;
+    StruktsSinglyNode *first_node;
 };
 
-struct _SinglyLinkedList {
-    int size;
-    SinglyNode *first_node;
+struct _StruktsSinglyNode {
+    int value;
+    StruktsSinglyNode *next;
 };
 
 /**
@@ -41,40 +41,41 @@ struct _SinglyLinkedList {
  *
  * @return a pointer to an empty linked list.
  */
-SinglyLinkedList *singly_linked_list_new();
+StruktsLinkedList *strukts_linkedlist_new();
 
 /**
  * Allocates a new node and inserts it at the beginning of a singly linked list.
  *
- * @param value is the value which this node will hold in the list.
  * @param list is the linked list to have the new node added to its beginning.
+ * @param value is the value which this node will hold in the list.
  */
-void insert_first(int value, SinglyLinkedList *list);
+void strukts_linkedlist_insert(StruktsLinkedList *list, int value);
 
 /**
  * Removes the first node from the beginning of a singly linked list.
  *
  * @param list is the linked list which will have the first node removed.
  */
-void remove_first(SinglyLinkedList *list);
+void strukts_linkedlist_remove(StruktsLinkedList *list);
 
 /**
  * Traverses the linked list trying to find a value.
  *
- * @param value is the value to be searched in the linked list.
  * @param list is the searched linked list.
+ * @param value is the value to be searched in the linked list.
+ *
  * @return true if the value is in the list; otherwise, false.
  */
-bool contains(int value, SinglyLinkedList *list);
+bool strukts_linkedlist_contains(StruktsLinkedList *list, int value);
 
 /**
  * Deallocates all memory previously allocated by all nodes in the linked list.
  *
  * @param list is the searched linked list.
  */
-void singly_linked_list_free(SinglyLinkedList *list);
+void strukts_linkedlist_free(StruktsLinkedList *list);
 
 #ifdef __cplusplus
 }
 #endif
-#endif /* __STRUKTS_LINKED_LISTS_H */
+#endif /* STRUKTS_LINKEDLIST_H */

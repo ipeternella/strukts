@@ -1,65 +1,66 @@
 #include "gtest/gtest.h"
-#include "linked_lists.h"
+#include "strukts_linkedlist.h"
 
 namespace {
-    TEST(LINKED_LISTS_SUITE, SHOULD_CREATE_AND_REMOVE_ITEMS_FROM_LINKED_LIST) {
+    TEST(STRUKTS_LINKEDLISTS_SUITE, SHOULD_CREATE_AND_REMOVE_ITEMS_FROM_LINKED_LIST) {
         // arrange & act
-        SinglyLinkedList *list = singly_linked_list_new();
+        StruktsLinkedList *list = strukts_linkedlist_new();
 
         // assert
         EXPECT_EQ(list->size, 0);
 
         // act
-        insert_first(10, list);
-        insert_first(20, list);
+        strukts_linkedlist_insert(list, 10);
+        strukts_linkedlist_insert(list, 20);
 
         // assert
         EXPECT_EQ(list->first_node->value, 20);
         EXPECT_EQ(list->size, 2);
 
         // act
-        remove_first(list);
+        strukts_linkedlist_remove(list);
 
         // assert
         EXPECT_EQ(list->size, 1);
         EXPECT_EQ(list->first_node->value, 10);
 
         // act
-        remove_first(list);
+        strukts_linkedlist_remove(list);
 
         // assert
         EXPECT_EQ(list->size, 0);
         EXPECT_TRUE(list->first_node == nullptr);
 
         // act (empty list)
-        remove_first(list);
+        strukts_linkedlist_remove(list);
 
         // assert
         EXPECT_EQ(list->size, 0);
         EXPECT_TRUE(list->first_node == nullptr);
 
-        singly_linked_list_free(list);  // frees testing memory
+        strukts_linkedlist_free(list);  // frees testing memory
     }
 
-    TEST(LINKED_LISTS_SUITE, SHOULD_FIND_ELEMENT_IN_THE_LINKED_LIST) {
+    TEST(STRUKTS_LINKEDLISTS_SUITE, SHOULD_FIND_ELEMENT_IN_THE_LINKED_LIST) {
         // arrange
-        SinglyLinkedList *list = singly_linked_list_new();
-        insert_first(1, list);
-        insert_first(5, list);
-        insert_first(10, list);
+        StruktsLinkedList *list = strukts_linkedlist_new();
+
+        strukts_linkedlist_insert(list, 1);
+        strukts_linkedlist_insert(list, 5);
+        strukts_linkedlist_insert(list, 10);
 
         // act
-        bool has_value = contains(5, list);
+        bool has_value = strukts_linkedlist_contains(list, 5);
 
         // assert
         EXPECT_TRUE(has_value);
 
         // act
-        has_value = contains(7, list);  // not in the list
+        has_value = strukts_linkedlist_contains(list, 7);  // not in the list
 
         // assert
         EXPECT_FALSE(has_value);
 
-        singly_linked_list_free(list);  // frees testing memory
+        strukts_linkedlist_free(list);  // frees testing memory
     }
 }  // namespace
