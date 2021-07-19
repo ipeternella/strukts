@@ -74,12 +74,12 @@ void strukts_linkedlist_free(StruktsLinkedList *list) {
     while (current_node != NULL) {
         StruktsSinglyNode *next_node = current_node->next;
 
-        /* deallocates current node */
+        /* deallocates each node of the list */
         free(current_node);
 
         current_node = next_node;
     }
 
-    /* deallocates list node */
+    /* deallocates the list pointer */
     free(list);
 }
