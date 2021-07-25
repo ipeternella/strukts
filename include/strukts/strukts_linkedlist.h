@@ -3,8 +3,9 @@
  *
  * @brief Module that contains linked lists implementations.
  *
- * A doubly linked list is a linear data struture that holds a single reference
- * to the next node of the list. To create one @see strukts_linkedlist_new.
+ * A doubly linked list is a linear data struture in which each node holds
+ * a reference to the previous and next nodes in the list. To create one
+ * @see strukts_linkedlist_new.
  */
 
 #ifndef STRUKTS_LINKEDLIST_H
