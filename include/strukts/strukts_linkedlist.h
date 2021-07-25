@@ -17,46 +17,64 @@ extern "C" {
 #include <stdbool.h>
 
 /**
- * A node to be used in a singly linked list.
- */
-typedef struct _StruktsSinglyNode StruktsSinglyNode;
-
-/**
- * A linked list.
+ * A doubly linked list which can hold string values.
  */
 typedef struct _StruktsLinkedList StruktsLinkedList;
 
+/**
+ * A node to be used in a doubly linked list.
+ */
+typedef struct _StruktsLinkedListNode StruktsLinkedListNode;
+
 struct _StruktsLinkedList {
     int size;
-    StruktsSinglyNode *first_node;
+
+    StruktsLinkedListNode *first_node;
+    StruktsLinkedListNode *last_node;
 };
 
-struct _StruktsSinglyNode {
-    int value;
-    StruktsSinglyNode *next;
+struct _StruktsLinkedListNode {
+    const char *value; /* ptr is mutable, but the value content is not */
+
+    StruktsLinkedListNode *next;
+    StruktsLinkedListNode *previous;
 };
 
 /**
- * Allocates a new empty singly linked list.
+ * Allocates a new empty doubly linked list.
  *
- * @return a pointer to an empty linked list.
+ * @return a pointer to an empty doubly linked list.
  */
 StruktsLinkedList *strukts_linkedlist_new();
 
 /**
- * Allocates a new node and inserts it at the beginning of a singly linked list.
+ * Allocates a new node and inserts it at the beginning (prepends) of the linked list.
  *
  * @param list is the linked list to have the new node added to its beginning.
- * @param value is the value which this node will hold in the list.
+ * @param value is a char pointer.
+ *
+ * @return true if a new node has been added to the beginning of the list; false otherwise.
  */
-void strukts_linkedlist_insert(StruktsLinkedList *list, int value);
+bool strukts_linkedlist_prepend(StruktsLinkedList *list, const char *value);
+
+/**
+ * Allocates a new node and inserts it at the end of the linked list.
+ *
+ * @param list is the linked list to have the new node added to its end.
+ * @param value is a char pointer.
+ *
+ * @return true if a new node has been added to the end of the list; false otherwise.
+ */
+bool strukts_linkedlist_append(StruktsLinkedList *list, const char *value);
 
 /**
  * Removes the first node from the beginning of a singly linked list.
  *
  * @param list is the linked list which will have the first node removed.
+ *
+ * @return true if the first node has been removed; false otherwise.
  */
-void strukts_linkedlist_remove(StruktsLinkedList *list);
+bool strukts_linkedlist_remove_first(StruktsLinkedList *list);
 
 /**
  * Traverses the linked list trying to find a value.
@@ -66,7 +84,7 @@ void strukts_linkedlist_remove(StruktsLinkedList *list);
  *
  * @return true if the value is in the list; otherwise, false.
  */
-bool strukts_linkedlist_contains(StruktsLinkedList *list, int value);
+bool strukts_linkedlist_contains(StruktsLinkedList *list, const char *value);
 
 /**
  * Deallocates all memory previously allocated by all nodes in the linked list.
