@@ -10,11 +10,11 @@ namespace {
         // arrange
         const char str[10] = "abcde";  // literal str: {'a', 'b', 'c', 'd', 'e', '\0'};
         const uint8_t *str_bytes = (uint8_t *)str;
+        const uint32_t seed = 0;
         size_t str_len = strlen(str);
-        const int seed = 0;
 
         // act
-        uint32_t hash = murmur3_hash(str_bytes, str_len, seed);
+        uint32_t hash = strukts_murmur3_hash(str_bytes, str_len, seed);
 
         // assert
         EXPECT_EQ(hash, -392455434);  // expectation from python's lib mmh3
@@ -24,11 +24,11 @@ namespace {
         // arrange
         const char str[10] = "ab";
         const uint8_t *str_bytes = (uint8_t *)str;
+        const uint32_t seed = 5;
         size_t str_len = strlen(str);
-        const int seed = 5;
 
         // act
-        uint32_t hash = murmur3_hash(str_bytes, str_len, seed);
+        uint32_t hash = strukts_murmur3_hash(str_bytes, str_len, seed);
 
         // assert
         EXPECT_EQ(hash, 810406479);  // expectation from python's lib mmh3
@@ -38,11 +38,11 @@ namespace {
         // arrange
         const char str[50] = "some really nice long key";
         const uint8_t *str_bytes = (uint8_t *)str;
+        const uint32_t seed = 10;
         size_t str_len = strlen(str);
-        uint32_t seed = 10;
 
         // act
-        uint32_t hash = murmur3_hash(str_bytes, str_len, seed);
+        uint32_t hash = strukts_murmur3_hash(str_bytes, str_len, seed);
 
         // assert
         EXPECT_EQ(hash, -464589223);  // expectation from python's lib mmh3

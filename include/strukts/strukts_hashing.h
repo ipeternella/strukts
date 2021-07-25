@@ -30,7 +30,7 @@ extern "C" {
  *
  * @return a fixed hash value of the key of 32 bits.
  */
-uint32_t murmur3_hash(const uint8_t* key, size_t key_len, uint32_t seed);
+uint32_t strukts_murmur3_hash(const uint8_t* key, size_t key_len, uint32_t seed);
 
 #ifdef __cplusplus
 }

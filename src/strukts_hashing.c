@@ -5,14 +5,14 @@
 #include <string.h>
 
 /* rotates value to left by amount times (also known as circular shift) */
-uint32_t _rotate_left(uint32_t value, uint8_t amount) {
+uint32_t _strukts_rotate_left(uint32_t value, uint8_t amount) {
     /* undef behavior for 0 or 32 */
     if (amount<1 | amount> 31) exit(EXIT_FAILURE);
 
     return value << amount | value >> (32 - amount);
 }
 
-uint32_t _build_remaining_chunk(const uint8_t* key, uint8_t remaining_bytes) {
+uint32_t _strukts_build_remaining_chunk(const uint8_t* key, uint8_t remaining_bytes) {
     uint32_t final_chunk = 0;
 
     switch (remaining_bytes) {
@@ -32,7 +32,7 @@ uint32_t _build_remaining_chunk(const uint8_t* key, uint8_t remaining_bytes) {
     return final_chunk;
 }
 
-uint32_t murmur3_hash(const uint8_t* key, size_t key_len, uint32_t seed) {
+uint32_t strukts_murmur3_hash(const uint8_t* key, size_t key_len, uint32_t seed) {
     /* constants of the algorithm */
     const uint32_t c1 = 0xcc9e2d51;
     const uint32_t c2 = 0x1b873593;
@@ -55,20 +55,20 @@ uint32_t murmur3_hash(const uint8_t* key, size_t key_len, uint32_t seed) {
 
         /* MUR */
         key_chunk *= c1;
-        key_chunk = _rotate_left(key_chunk, r1); /* ROL */
+        key_chunk = _strukts_rotate_left(key_chunk, r1); /* ROL */
         key_chunk *= c2;
 
         hash ^= key_chunk;
-        hash = _rotate_left(hash, r2);
+        hash = _strukts_rotate_left(hash, r2);
         hash = (hash * m) + n;
     }
 
     /* remaining bytes (1, 2 or 3 chunks of 4-bytes words) */
-    key_chunk = _build_remaining_chunk(key, key_len & 3);
+    key_chunk = _strukts_build_remaining_chunk(key, key_len & 3);
 
     /* MUR */
     key_chunk *= c1;
-    key_chunk = _rotate_left(key_chunk, r1); /* ROL */
+    key_chunk = _strukts_rotate_left(key_chunk, r1); /* ROL */
     key_chunk *= c2;
     hash ^= key_chunk;
 
