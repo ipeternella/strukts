@@ -3,7 +3,7 @@
  *
  * @brief Module that contains linked lists implementations.
  *
- * A singly linked list is a linear data struture that holds a single reference
+ * A doubly linked list is a linear data struture that holds a single reference
  * to the next node of the list. To create one @see strukts_linkedlist_new.
  */
 
@@ -15,6 +15,7 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 /**
  * A doubly linked list which can hold string values.
@@ -26,8 +27,13 @@ typedef struct _StruktsLinkedList StruktsLinkedList;
  */
 typedef struct _StruktsLinkedListNode StruktsLinkedListNode;
 
+/**
+ * Represents a search result in a linear data structure.
+ */
+typedef struct _StruktsLinearSearchResult StruktsLinearSearchResult;
+
 struct _StruktsLinkedList {
-    int size;
+    size_t size;
 
     StruktsLinkedListNode *first_node;
     StruktsLinkedListNode *last_node;
@@ -38,6 +44,11 @@ struct _StruktsLinkedListNode {
 
     StruktsLinkedListNode *next;
     StruktsLinkedListNode *previous;
+};
+
+struct _StruktsLinearSearchResult {
+    bool found;
+    size_t position;
 };
 
 /**
@@ -68,7 +79,7 @@ bool strukts_linkedlist_prepend(StruktsLinkedList *list, const char *value);
 bool strukts_linkedlist_append(StruktsLinkedList *list, const char *value);
 
 /**
- * Removes the first node from the beginning of a singly linked list.
+ * Removes the first node from the beginning of a doubly linked list.
  *
  * @param list is the linked list which will have the first node removed.
  *
@@ -77,14 +88,33 @@ bool strukts_linkedlist_append(StruktsLinkedList *list, const char *value);
 bool strukts_linkedlist_remove_first(StruktsLinkedList *list);
 
 /**
+ * Removes the first node from the beginning of a doubly linked list.
+ *
+ * @param list is the linked list which will have the first node removed.
+ *
+ * @return true if the first node has been removed; false otherwise.
+ */
+bool strukts_linkedlist_remove_last(StruktsLinkedList *list);
+
+/**
+ * Removes a node from the doubly linked list if its value is found.
+ *
+ * @param list is the linked list which will have the node removed.
+ *
+ * @return true if the node's value has been found and was removed; false otherwise.
+ */
+bool strukts_linkedlist_remove(StruktsLinkedList *list, const char *value);
+
+/**
  * Traverses the linked list trying to find a value.
  *
  * @param list is the searched linked list.
  * @param value is the value to be searched in the linked list.
  *
- * @return true if the value is in the list; otherwise, false.
+ * @return a linear search result which contains whether the value was found
+ * and its position.
  */
-bool strukts_linkedlist_contains(StruktsLinkedList *list, const char *value);
+StruktsLinearSearchResult strukts_linkedlist_contains(StruktsLinkedList *list, const char *value);
 
 /**
  * Deallocates all memory previously allocated by all nodes in the linked list.

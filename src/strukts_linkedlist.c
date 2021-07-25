@@ -82,6 +82,8 @@ bool strukts_linkedlist_remove_first(StruktsLinkedList *list) {
     if (list->size == 0) return false;
 
     if (list->size == 1) {
+        free(list->first_node);
+
         list->first_node = NULL;
         list->last_node = NULL;
         list->size--;
@@ -102,16 +104,76 @@ bool strukts_linkedlist_remove_first(StruktsLinkedList *list) {
     return true;
 }
 
-bool strukts_linkedlist_contains(StruktsLinkedList *list, const char *value) {
+bool strukts_linkedlist_remove_last(StruktsLinkedList *list) {
+    if (list->size == 0) return false;
+
+    if (list->size == 1) {
+        free(list->first_node);
+
+        list->first_node = NULL;
+        list->last_node = NULL;
+        list->size--;
+
+        return true;
+    }
+
+    /* lists bigger than one */
+    StruktsLinkedListNode *old_last_node = list->last_node;
+    StruktsLinkedListNode *new_last_node = old_last_node->previous;
+
+    new_last_node->next = NULL;
+    list->last_node = new_last_node;
+    list->size--;
+
+    free(old_last_node);
+
+    return true;
+}
+
+bool strukts_linkedlist_remove(StruktsLinkedList *list, const char *value) {
+    StruktsLinearSearchResult search_result = strukts_linkedlist_contains(list, value);
+
+    if (!search_result.found) return false;
+    if (search_result.position == 0) return strukts_linkedlist_remove_first(list);
+    if (search_result.position == list->size - 1) return strukts_linkedlist_remove_last(list);
+
+    /* guaranteed to be in the middle of the list */
     StruktsLinkedListNode *current_node = list->first_node;
 
     while (current_node != NULL) {
-        if (strcmp(current_node->value, value) == 0) return true;
+        if (strcmp(current_node->value, value) == 0) break;
 
-        current_node = current_node->next; /* may be NULL */
+        current_node = current_node->next;
     }
 
-    return false;
+    /* disconnect node from list */
+    current_node->previous->next = current_node->next;
+    current_node->next->previous = current_node->previous;
+    list->size--;
+
+    free(current_node);
+
+    return true;
+}
+
+StruktsLinearSearchResult strukts_linkedlist_contains(StruktsLinkedList *list, const char *value) {
+    StruktsLinkedListNode *current_node = list->first_node;
+    StruktsLinearSearchResult result = {false, 0};
+    size_t position = 0;
+
+    while (current_node != NULL) {
+        if (strcmp(current_node->value, value) == 0) {
+            result.found = true;
+            result.position = position;
+
+            break;
+        }
+
+        current_node = current_node->next;
+        position++;
+    }
+
+    return result;
 }
 
 void strukts_linkedlist_free(StruktsLinkedList *list) {
