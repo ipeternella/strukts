@@ -34,5 +34,6 @@ include_directories(${safemalloc_SOURCE_DIR})  # includes safemalloc headers ~ g
 add_subdirectory(src)
 
 if(WITH_TEST)
+    add_compile_definitions(DEBUG)  # adds DEBUG directive for tests
     add_subdirectory(tests)    
 endif()
