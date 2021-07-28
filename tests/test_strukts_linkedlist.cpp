@@ -6,57 +6,59 @@
 namespace {
     TEST(STRUKTS_LINKEDLISTS_SUITE, SHOULD_CREATE_AND_REMOVE_ITEMS_FROM_DOUBLY_LINKED_LIST) {
         // arrange & act
-        StruktsLinkedList *list = strukts_linkedlist_new();
+        StruktsLinkedList* list = strukts_linkedlist_new();
 
         // assert
         EXPECT_EQ(list->size, 0);
 
         // act - add elements to the beginning
-        strukts_linkedlist_prepend(list, "10");
-        strukts_linkedlist_prepend(list, "20");
-        strukts_linkedlist_prepend(list, "30");
+        strukts_linkedlist_prependkv(list, "10");
+        strukts_linkedlist_prependkv(list, "20");
+        strukts_linkedlist_prependkv(list, "30");
 
         // assert - ["30", "20", "10"]
         EXPECT_EQ(list->size, 3);
+        EXPECT_EQ(strcmp(list->first_node->key, "30"), 0);
         EXPECT_EQ(strcmp(list->first_node->value, "30"), 0);
+        EXPECT_EQ(strcmp(list->last_node->key, "10"), 0);
         EXPECT_EQ(strcmp(list->last_node->value, "10"), 0);
 
         // act - add elements to the end
-        strukts_linkedlist_append(list, "40");
-        strukts_linkedlist_append(list, "50");
+        strukts_linkedlist_appendkv(list, "40");
+        strukts_linkedlist_appendkv(list, "50");
 
         // assert - ["30", "20", "10", "40", "50"]
         EXPECT_EQ(list->size, 5);
-        EXPECT_EQ(strcmp(list->first_node->value, "30"), 0);
-        EXPECT_EQ(strcmp(list->last_node->value, "50"), 0);
+        EXPECT_EQ(strcmp(list->first_node->key, "30"), 0);
+        EXPECT_EQ(strcmp(list->last_node->key, "50"), 0);
 
         // act - remove first element
         strukts_linkedlist_remove_first(list);
 
         // assert - ["20", "10", "40", "50"]
         EXPECT_EQ(list->size, 4);
-        EXPECT_EQ(strcmp(list->first_node->value, "20"), 0);
-        EXPECT_EQ(strcmp(list->last_node->value, "50"), 0);
+        EXPECT_EQ(strcmp(list->first_node->key, "20"), 0);
+        EXPECT_EQ(strcmp(list->last_node->key, "50"), 0);
 
         // act - remove last element
         strukts_linkedlist_remove_last(list);
 
         // assert - ["20", "10", "40"]
         EXPECT_EQ(list->size, 3);
-        EXPECT_EQ(strcmp(list->first_node->value, "20"), 0);
-        EXPECT_EQ(strcmp(list->last_node->value, "40"), 0);
+        EXPECT_EQ(strcmp(list->first_node->key, "20"), 0);
+        EXPECT_EQ(strcmp(list->last_node->key, "40"), 0);
 
         strukts_linkedlist_free(list);
     }
 
     TEST(STRUKTS_LINKEDLISTS_SUITE, SHOULD_FIND_ELEMENT_IN_THE_LINKED_LIST) {
         // arrange - create list ["1", "2", "3"]
-        StruktsLinkedList *list = strukts_linkedlist_new();
+        StruktsLinkedList* list = strukts_linkedlist_new();
         StruktsLinearSearchResult search_result;
 
-        strukts_linkedlist_append(list, "1");
-        strukts_linkedlist_append(list, "2");
-        strukts_linkedlist_append(list, "3");
+        strukts_linkedlist_appendkv(list, "1");
+        strukts_linkedlist_appendkv(list, "2");
+        strukts_linkedlist_appendkv(list, "3");
 
         // act - search in ["1", "2", "3"]
         search_result = strukts_linkedlist_contains(list, "1");
@@ -99,12 +101,12 @@ namespace {
 
     TEST(STRUKTS_LINKEDLISTS_SUITE, SHOULD_REMOVE_ELEMENTS_FROM_LINKEDLIST) {
         // arrange - create list ["1", "2", "3"]
-        StruktsLinkedList *list = strukts_linkedlist_new();
+        StruktsLinkedList* list = strukts_linkedlist_new();
         bool result;
 
-        strukts_linkedlist_append(list, "1");
-        strukts_linkedlist_append(list, "2");
-        strukts_linkedlist_append(list, "3");
+        strukts_linkedlist_appendkv(list, "1");
+        strukts_linkedlist_appendkv(list, "2");
+        strukts_linkedlist_appendkv(list, "3");
 
         // act - remove middle value -> ["1", "3"]
         result = strukts_linkedlist_remove(list, "2");

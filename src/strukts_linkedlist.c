@@ -12,8 +12,8 @@
 #define free sf_free
 #endif
 
-StruktsLinkedList *strukts_linkedlist_new() {
-    StruktsLinkedList *list = (StruktsLinkedList *)malloc(sizeof(StruktsLinkedList));
+StruktsLinkedList* strukts_linkedlist_new() {
+    StruktsLinkedList* list = (StruktsLinkedList*)malloc(sizeof(StruktsLinkedList));
 
     if (list == NULL) return NULL;
 
@@ -25,9 +25,8 @@ StruktsLinkedList *strukts_linkedlist_new() {
     return list;
 }
 
-StruktsLinkedListNode *strukts_linkedlistnode_new(const char *value) {
-    StruktsLinkedListNode *new_node =
-        (StruktsLinkedListNode *)malloc(sizeof(StruktsLinkedListNode));
+StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, const char* value) {
+    StruktsLinkedListNode* new_node = (StruktsLinkedListNode*)malloc(sizeof(StruktsLinkedListNode));
 
     if (new_node == NULL) return NULL;
 
@@ -35,12 +34,13 @@ StruktsLinkedListNode *strukts_linkedlistnode_new(const char *value) {
     new_node->next = NULL;
     new_node->previous = NULL;
     new_node->value = value;
+    new_node->key = key;
 
     return new_node;
 }
 
-bool strukts_linkedlist_prepend(StruktsLinkedList *list, const char *value) {
-    StruktsLinkedListNode *new_node = strukts_linkedlistnode_new(value);
+bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, const char* value) {
+    StruktsLinkedListNode* new_node = strukts_linkedlistnode_new(key, value);
 
     if (new_node == NULL) return false;
 
@@ -57,8 +57,8 @@ bool strukts_linkedlist_prepend(StruktsLinkedList *list, const char *value) {
     return true;
 }
 
-bool strukts_linkedlist_append(StruktsLinkedList *list, const char *value) {
-    StruktsLinkedListNode *new_node = strukts_linkedlistnode_new(value);
+bool strukts_linkedlist_append(StruktsLinkedList* list, const char* key, const char* value) {
+    StruktsLinkedListNode* new_node = strukts_linkedlistnode_new(key, value);
 
     if (new_node == NULL) return false;
 
@@ -78,7 +78,7 @@ bool strukts_linkedlist_append(StruktsLinkedList *list, const char *value) {
     return true;
 }
 
-bool strukts_linkedlist_remove_first(StruktsLinkedList *list) {
+bool strukts_linkedlist_remove_first(StruktsLinkedList* list) {
     if (list->size == 0) return false;
 
     if (list->size == 1) {
@@ -92,8 +92,8 @@ bool strukts_linkedlist_remove_first(StruktsLinkedList *list) {
     }
 
     /* lists bigger than one */
-    StruktsLinkedListNode *old_first_node = list->first_node;
-    StruktsLinkedListNode *new_first_node = old_first_node->next;
+    StruktsLinkedListNode* old_first_node = list->first_node;
+    StruktsLinkedListNode* new_first_node = old_first_node->next;
 
     new_first_node->previous = NULL;
     list->first_node = new_first_node;
@@ -104,7 +104,7 @@ bool strukts_linkedlist_remove_first(StruktsLinkedList *list) {
     return true;
 }
 
-bool strukts_linkedlist_remove_last(StruktsLinkedList *list) {
+bool strukts_linkedlist_remove_last(StruktsLinkedList* list) {
     if (list->size == 0) return false;
 
     if (list->size == 1) {
@@ -118,8 +118,8 @@ bool strukts_linkedlist_remove_last(StruktsLinkedList *list) {
     }
 
     /* lists bigger than one */
-    StruktsLinkedListNode *old_last_node = list->last_node;
-    StruktsLinkedListNode *new_last_node = old_last_node->previous;
+    StruktsLinkedListNode* old_last_node = list->last_node;
+    StruktsLinkedListNode* new_last_node = old_last_node->previous;
 
     new_last_node->next = NULL;
     list->last_node = new_last_node;
@@ -130,18 +130,18 @@ bool strukts_linkedlist_remove_last(StruktsLinkedList *list) {
     return true;
 }
 
-bool strukts_linkedlist_remove(StruktsLinkedList *list, const char *value) {
-    StruktsLinearSearchResult search_result = strukts_linkedlist_contains(list, value);
+bool strukts_linkedlist_remove(StruktsLinkedList* list, const char* key) {
+    StruktsLinearSearchResult search_result = strukts_linkedlist_contains(list, key);
 
     if (!search_result.found) return false;
     if (search_result.position == 0) return strukts_linkedlist_remove_first(list);
     if (search_result.position == list->size - 1) return strukts_linkedlist_remove_last(list);
 
     /* guaranteed to be in the middle of the list */
-    StruktsLinkedListNode *current_node = list->first_node;
+    StruktsLinkedListNode* current_node = list->first_node;
 
     while (current_node != NULL) {
-        if (strcmp(current_node->value, value) == 0) break;
+        if (strcmp(current_node->key, key) == 0) break;
 
         current_node = current_node->next;
     }
@@ -156,15 +156,16 @@ bool strukts_linkedlist_remove(StruktsLinkedList *list, const char *value) {
     return true;
 }
 
-StruktsLinearSearchResult strukts_linkedlist_contains(StruktsLinkedList *list, const char *value) {
-    StruktsLinkedListNode *current_node = list->first_node;
+StruktsLinearSearchResult strukts_linkedlist_contains(StruktsLinkedList* list, const char* key) {
+    StruktsLinkedListNode* current_node = list->first_node;
     StruktsLinearSearchResult result = {false, 0};
     size_t position = 0;
 
     while (current_node != NULL) {
-        if (strcmp(current_node->value, value) == 0) {
+        if (strcmp(current_node->key, key) == 0) {
             result.found = true;
             result.position = position;
+            result.value = current_node->value;
 
             break;
         }
@@ -176,11 +177,11 @@ StruktsLinearSearchResult strukts_linkedlist_contains(StruktsLinkedList *list, c
     return result;
 }
 
-void strukts_linkedlist_free(StruktsLinkedList *list) {
-    StruktsLinkedListNode *current_node = list->first_node;
+void strukts_linkedlist_free(StruktsLinkedList* list) {
+    StruktsLinkedListNode* current_node = list->first_node;
 
     while (current_node != NULL) {
-        StruktsLinkedListNode *next_node = current_node->next;
+        StruktsLinkedListNode* next_node = current_node->next;
 
         /* deallocates each node of the list */
         free(current_node);
