@@ -9,7 +9,7 @@ namespace {
     TEST(STRUKTS_HASHING_SUITE, SHOULD_32BIT_MURMUR3_HASH_STRING_WITH_5_BYTES) {
         // arrange
         const char str[10] = "abcde";  // literal str: {'a', 'b', 'c', 'd', 'e', '\0'};
-        const uint8_t *str_bytes = (uint8_t *)str;
+        const uint8_t* str_bytes = (uint8_t*)str;
         const uint32_t seed = 0;
         size_t str_len = strlen(str);
 
@@ -23,7 +23,7 @@ namespace {
     TEST(STRUKTS_HASHING_SUITE, SHOULD_32BIT_MURMUR3_HASH_STRING_WITH_2_BYTES) {
         // arrange
         const char str[10] = "ab";
-        const uint8_t *str_bytes = (uint8_t *)str;
+        const uint8_t* str_bytes = (uint8_t*)str;
         const uint32_t seed = 5;
         size_t str_len = strlen(str);
 
@@ -37,7 +37,7 @@ namespace {
     TEST(STRUKTS_HASHING_SUITE, SHOULD_32BIT_MURMUR3_HASH_STRING_WITH_22_BYTES) {
         // arrange
         const char str[50] = "some really nice long key";
-        const uint8_t *str_bytes = (uint8_t *)str;
+        const uint8_t* str_bytes = (uint8_t*)str;
         const uint32_t seed = 10;
         size_t str_len = strlen(str);
 
