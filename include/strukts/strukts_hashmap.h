@@ -57,7 +57,7 @@ bool strukts_hashmap_add(StruktsHashmap* hashmap, const char* key, const char* v
  * @param hashmap is a pointer to hashmap.
  * @param key is a pointer to a string key which will be searched in the hash map.
  *
- * @return a pointer to the key's value if the key was found in the hash map; false, otherwise.
+ * @return a pointer to the key's value if the key was found in the hash map; NULL, otherwise.
  */
 const char* strukts_hashmap_get(StruktsHashmap* hashmap, const char* key);
 
