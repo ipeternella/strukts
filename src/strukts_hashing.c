@@ -5,14 +5,14 @@
 #include <string.h>
 
 /* rotates value to left by amount times (also known as circular shift) */
-uint32_t _strukts_rotate_left(uint32_t value, uint8_t amount) {
+static uint32_t strukts_rotate_left(uint32_t value, uint8_t amount) {
     /* undef behavior for 0 or 32 */
     if (amount<1 | amount> 31) exit(EXIT_FAILURE);
 
     return value << amount | value >> (32 - amount);
 }
 
-uint32_t _strukts_build_remaining_chunk(const uint8_t* key, uint8_t remaining_bytes) {
+static uint32_t strukts_build_remaining_chunk(const uint8_t* key, uint8_t remaining_bytes) {
     uint32_t final_chunk = 0;
 
     switch (remaining_bytes) {
@@ -41,12 +41,12 @@ uint32_t strukts_murmur3_hash(const uint8_t* key, size_t key_len, uint32_t seed)
     const uint8_t m = 5;
     const uint32_t n = 0xe6546b64;
 
-    const size_t chunks_amount = key_len / 4; /* amount of 4 bytes chunks in key */
-    uint32_t key_chunk = 0;                   /* buffer of 4 bytes */
+    /* algorithm local variables */
+    uint32_t key_chunk = 0; /* buffer of 4 bytes */
     uint32_t hash = seed;
 
     /* 4 bytes chunk processing */
-    for (size_t i = 0; i < chunks_amount; ++i) {
+    for (size_t i = 0; i < key_len / 4; ++i) {
         /* copies 4 bytes into key chunk */
         memcpy(&key_chunk, key, sizeof(uint32_t));
 
@@ -55,20 +55,20 @@ uint32_t strukts_murmur3_hash(const uint8_t* key, size_t key_len, uint32_t seed)
 
         /* MUR */
         key_chunk *= c1;
-        key_chunk = _strukts_rotate_left(key_chunk, r1); /* ROL */
+        key_chunk = strukts_rotate_left(key_chunk, r1); /* ROL */
         key_chunk *= c2;
 
         hash ^= key_chunk;
-        hash = _strukts_rotate_left(hash, r2);
+        hash = strukts_rotate_left(hash, r2);
         hash = (hash * m) + n;
     }
 
     /* remaining bytes (1, 2 or 3 chunks of 4-bytes words) */
-    key_chunk = _strukts_build_remaining_chunk(key, key_len & 3);
+    key_chunk = strukts_build_remaining_chunk(key, key_len & 3);
 
     /* MUR */
     key_chunk *= c1;
-    key_chunk = _strukts_rotate_left(key_chunk, r1); /* ROL */
+    key_chunk = strukts_rotate_left(key_chunk, r1); /* ROL */
     key_chunk *= c2;
     hash ^= key_chunk;
 

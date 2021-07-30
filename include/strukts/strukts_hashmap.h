@@ -29,7 +29,6 @@ typedef struct _StruktsHashmap StruktsHashmap;
 struct _StruktsHashmap {
     size_t size;
     size_t buckets_size;
-
     StruktsLinkedList* buckets[STRUKTS_HASHMAP_INITIAL_BUCKETS_SIZE];
 };
 

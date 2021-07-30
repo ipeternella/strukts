@@ -7,7 +7,7 @@
  * (dictionaries, symbol tables, etc.). Unlike crypto hashes, they're NOT designed
  * for preimage resistance, i.e., they are not hard to reverse by an adversary.
  *
- * The original MurMurHash3 algorithm was designed by Austin Appleby in 2008.
+ * The original MurMur hash algorithm was designed by Austin Appleby in 2008.
  */
 
 #ifndef STRUKTS_HASHING_H
