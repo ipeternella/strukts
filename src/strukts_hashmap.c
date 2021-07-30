@@ -49,7 +49,7 @@ bool strukts_hashmap_add(StruktsHashmap* hashmap, const char* key, const char* v
     return true;
 }
 
-const char* strukts_hashmap_get(StruktsHashmap* hashmap, const char* key) {
+char* strukts_hashmap_get(StruktsHashmap* hashmap, const char* key) {
     const uint8_t* key_bytes = (uint8_t*)key;
     const size_t key_len = strlen(key);
     const uint32_t seed = 0;
@@ -62,9 +62,9 @@ const char* strukts_hashmap_get(StruktsHashmap* hashmap, const char* key) {
     size_t bucket_hash = key_hash % hashmap->buckets_size;
 
     list = hashmap->buckets[bucket_hash];
-    search_result = strukts_linkedlist_contains(list, key);
+    search_result = strukts_linkedlist_find(list, key);
 
     if (!search_result.found) return NULL;
 
-    return search_result.value;
+    return search_result.node->value;
 }

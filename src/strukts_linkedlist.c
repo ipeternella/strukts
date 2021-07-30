@@ -25,7 +25,7 @@ StruktsLinkedList* strukts_linkedlist_new() {
     return list;
 }
 
-StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, const char* value) {
+static StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, const char* value) {
     StruktsLinkedListNode* new_node = (StruktsLinkedListNode*)malloc(sizeof(StruktsLinkedListNode));
 
     if (new_node == NULL) return NULL;
@@ -33,8 +33,8 @@ StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, const char* v
     /* initialize new node */
     new_node->next = NULL;
     new_node->previous = NULL;
-    new_node->value = value;
     new_node->key = key;
+    new_node->value = (char*)value;
 
     return new_node;
 }
@@ -131,20 +131,14 @@ bool strukts_linkedlist_remove_last(StruktsLinkedList* list) {
 }
 
 bool strukts_linkedlist_remove(StruktsLinkedList* list, const char* key) {
-    StruktsLinearSearchResult search_result = strukts_linkedlist_contains(list, key);
+    StruktsLinearSearchResult search_result = strukts_linkedlist_find(list, key);
 
     if (!search_result.found) return false;
     if (search_result.position == 0) return strukts_linkedlist_remove_first(list);
     if (search_result.position == list->size - 1) return strukts_linkedlist_remove_last(list);
 
     /* guaranteed to be in the middle of the list */
-    StruktsLinkedListNode* current_node = list->first_node;
-
-    while (current_node != NULL) {
-        if (strcmp(current_node->key, key) == 0) break;
-
-        current_node = current_node->next;
-    }
+    StruktsLinkedListNode* current_node = search_result.node;
 
     /* disconnect node from list */
     current_node->previous->next = current_node->next;
@@ -156,16 +150,16 @@ bool strukts_linkedlist_remove(StruktsLinkedList* list, const char* key) {
     return true;
 }
 
-StruktsLinearSearchResult strukts_linkedlist_contains(StruktsLinkedList* list, const char* key) {
+StruktsLinearSearchResult strukts_linkedlist_find(StruktsLinkedList* list, const char* key) {
     StruktsLinkedListNode* current_node = list->first_node;
-    StruktsLinearSearchResult result = {false, 0};
+    StruktsLinearSearchResult result = {.found = false, .position = 0, .node = NULL};
     size_t position = 0;
 
     while (current_node != NULL) {
         if (strcmp(current_node->key, key) == 0) {
             result.found = true;
             result.position = position;
-            result.value = current_node->value;
+            result.node = current_node;
 
             break;
         }

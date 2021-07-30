@@ -27,10 +27,8 @@ extern "C" {
 typedef struct _StruktsLinkedListNode StruktsLinkedListNode;
 
 struct _StruktsLinkedListNode {
-    const char* key;
-
-    /* satellite data */
-    const char* value;
+    const char* key; /* 'id' for the values, should not be mutated */
+    char* value;
     StruktsLinkedListNode* next;
     StruktsLinkedListNode* previous;
 };
@@ -42,7 +40,6 @@ typedef struct _StruktsLinkedList StruktsLinkedList;
 
 struct _StruktsLinkedList {
     size_t size;
-
     StruktsLinkedListNode* first_node;
     StruktsLinkedListNode* last_node;
 };
@@ -55,8 +52,7 @@ typedef struct _StruktsLinearSearchResult StruktsLinearSearchResult;
 struct _StruktsLinearSearchResult {
     bool found;
     size_t position;
-
-    const char* value;
+    StruktsLinkedListNode* node;
 };
 
 /**
@@ -69,6 +65,7 @@ StruktsLinkedList* strukts_linkedlist_new();
 /**
  * Allocates a new node and inserts it at the beginning (prepends) of the linked list. For adding
  * a node whose key is equal to its value, use the macro strukts_linkedlist_prependkv(list, key).
+ * This function does not modify the contents of key and value pointers.
  *
  * @param list is the linked list to have the new node added to its beginning.
  * @param key is the key used to identify this node.
@@ -81,6 +78,7 @@ bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, const 
 /**
  * Allocates a new node and inserts it at the end of the linked list. For adding a node whose
  * key is equal to its value, use the macro strukts_linkedlist_appendkv(list, key).
+ * This function does not modify the contents of key and value pointers.
  *
  * @param list is the linked list to have the new node added to its end.
  * @param key is the key used to identify this node.
@@ -118,7 +116,7 @@ bool strukts_linkedlist_remove_last(StruktsLinkedList* list);
 bool strukts_linkedlist_remove(StruktsLinkedList* list, const char* key);
 
 /**
- * Traverses the linked list trying to find a value.
+ * Traverses the linked list trying to find a value by its key.
  *
  * @param list is the searched linked list.
  * @param key is the key to be searched in the linked list.
@@ -126,7 +124,7 @@ bool strukts_linkedlist_remove(StruktsLinkedList* list, const char* key);
  * @return a linear search result which contains whether the value was found
  * and its position.
  */
-StruktsLinearSearchResult strukts_linkedlist_contains(StruktsLinkedList* list, const char* key);
+StruktsLinearSearchResult strukts_linkedlist_find(StruktsLinkedList* list, const char* key);
 
 /**
  * Deallocates all memory previously allocated by all nodes in the linked list.

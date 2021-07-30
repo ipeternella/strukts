@@ -61,40 +61,44 @@ namespace {
         strukts_linkedlist_appendkv(list, "3");
 
         // act - search in ["1", "2", "3"]
-        search_result = strukts_linkedlist_contains(list, "1");
+        search_result = strukts_linkedlist_find(list, "1");
 
         // assert
         EXPECT_TRUE(search_result.found);
         EXPECT_EQ(search_result.position, 0);
+        EXPECT_EQ(strcmp(search_result.node->key, "1"), 0);
+        EXPECT_EQ(strcmp(search_result.node->value, "1"), 0);
 
         // act
-        search_result = strukts_linkedlist_contains(list, "2");
+        search_result = strukts_linkedlist_find(list, "2");
 
         // assert
         EXPECT_TRUE(search_result.found);
         EXPECT_EQ(search_result.position, 1);
 
         // act
-        search_result = strukts_linkedlist_contains(list, "3");
+        search_result = strukts_linkedlist_find(list, "3");
 
         // assert
         EXPECT_TRUE(search_result.found);
         EXPECT_EQ(search_result.position, 2);
 
         // act
-        search_result = strukts_linkedlist_contains(list, "7");  // not in the list
+        search_result = strukts_linkedlist_find(list, "7");  // not in the list
 
         // assert
         EXPECT_FALSE(search_result.found);  // not found
         EXPECT_EQ(search_result.position, 0);
+        EXPECT_EQ(search_result.node, nullptr);
 
         // act - remove last element and search for it - ["1", "2"]
         strukts_linkedlist_remove_last(list);
-        search_result = strukts_linkedlist_contains(list, "3");
+        search_result = strukts_linkedlist_find(list, "3");
 
         // assert
         EXPECT_FALSE(search_result.found);  // not found
         EXPECT_EQ(search_result.position, 0);
+        EXPECT_EQ(search_result.node, nullptr);
 
         strukts_linkedlist_free(list);  // frees testing memory
     }
