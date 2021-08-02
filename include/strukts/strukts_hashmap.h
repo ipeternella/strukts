@@ -32,13 +32,14 @@ extern "C" {
 typedef struct _StruktsHashmap StruktsHashmap;
 
 struct _StruktsHashmap {
-    size_t size;
-    size_t capacity;             /* amount of available buckets */
-    StruktsLinkedList** buckets; /* pointer to an array of lists pointers (buckets) */
+    size_t size;                 /* amount of keys so far */
+    size_t capacity;             /* amount of available buckets (capacity) */
+    StruktsLinkedList** buckets; /* pointer to an array of buckets (linked lists for collisions) */
 };
 
 /**
- * Allocates a new hash map with a starting size bucket to store keys and values.
+ * Allocates a new hash map whose initial capacity (amount of buckets) is
+ * STRUKTS_HASHMAP_INITIAL_CAPACITY (8) which can be used to store keys and values.
  *
  * @return a pointer to an empty hashmap.
  */
@@ -52,7 +53,10 @@ StruktsHashmap* strukts_hashmap_new();
 void strukts_hashmap_free(StruktsHashmap* hashmap);
 
 /**
- * Adds a new key (and its value) to a hash map.
+ * Adds a new key (and its value) to a hash map. If the current load factor is bigger than
+ * STRUKTS_HASHMAP_MAX_LOAD_FACTOR (0.7), a new hashmap with twice as much capacity (always a power
+ * of 2) is allocated and all current keys/values are rehashed into the new hashmap dynamically.
+ * Hence, the hashmap pointer can be mutated to point to a new bigger hashmap, if necessary.
  *
  * @param hashmap is the address of a hashmap pointer.
  * @param key is a pointer to a string key.
