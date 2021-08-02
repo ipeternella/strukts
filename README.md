@@ -30,7 +30,7 @@ Finally, this project is a training ground for exercising some classical algorit
 
 Strukts uses an external lib called [safemalloc](https://github.com/Theldus/safemalloc) that is used to provide some degree of memory safety as `safemalloc` warns, during tests, if there are memory leaks (memory that should have been deallocated but was not) and other memory problems.
 
-As an example, if we comment out the last `free()` invocation inside the function [strukts_linkedlist_free](src/strukts_linkedlist.c) that is responsible for releasing all the allocated heap memory of a singly linked list, then once we run the tests we should see the following warning:
+As an example, if we comment out the last `free()` invocation inside the function [strukts_linkedlist_free](src/strukts_linkedlist.c) that is responsible for releasing all the allocated heap memory of a linked list, then once we run the tests we should see the following warning:
 
 ```sh
 Memory leaks were found during execution, please check below and fix.
