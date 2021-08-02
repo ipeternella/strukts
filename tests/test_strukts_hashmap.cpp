@@ -7,26 +7,65 @@
 #include "strukts_hashmap.h"
 
 namespace {
-    TEST(STRUKTS_HASHMAP_SUITE, SHOULD_ADD_KEY_VALUE_TO_HASHMAP) {
+    TEST(STRUKTS_HASHMAP_SUITE, SHOULD_ADD_KEY_VALUE_TO_HASHMAP_WITH_REHASHING) {
         // arrange
-        const char key_1[10] = "k1";
-        const char value_1[10] = "v1";
         const char* result;
-
         StruktsHashmap* dict = strukts_hashmap_new();
 
         // act
-        bool added = strukts_hashmap_add(dict, key_1, value_1);
+        bool added = strukts_hashmap_add(&dict, "k1", "v1");
 
         // assert
         EXPECT_TRUE(added);
         EXPECT_EQ(dict->size, 1);
-        EXPECT_EQ(dict->buckets_size, 8); /* starter value */
+        EXPECT_EQ(dict->capacity, 1); /* starter value */
 
         // act - search for keys in the hash table
         result = strukts_hashmap_get(dict, "k1");
 
         // assert
         EXPECT_EQ(strcmp(result, "v1"), 0);
+
+        // act - should trigger rehash from capacity 1 to 2^1
+        added = strukts_hashmap_add(&dict, "k2", "v2");
+        result = strukts_hashmap_get(dict, "k2");
+
+        // assert
+        EXPECT_TRUE(added);
+        EXPECT_EQ(dict->size, 2);
+        EXPECT_EQ(dict->capacity, 2);
+        EXPECT_EQ(strcmp(result, "v2"), 0);
+
+        // act - should trigger rehash from 2ˆ1 to 2^2
+        added = strukts_hashmap_add(&dict, "k3", "v3");
+        result = strukts_hashmap_get(dict, "k3");
+
+        // assert
+        EXPECT_TRUE(added);
+        EXPECT_EQ(dict->size, 3);
+        EXPECT_EQ(dict->capacity, 4);
+        EXPECT_EQ(strcmp(result, "v3"), 0);
+
+        // act - should trigger rehash from 2^2 to 2^3
+        added = strukts_hashmap_add(&dict, "k4", "v4");
+        result = strukts_hashmap_get(dict, "k4");
+
+        // assert
+        EXPECT_TRUE(added);
+        EXPECT_EQ(dict->size, 4);
+        EXPECT_EQ(dict->capacity, 8);
+        EXPECT_EQ(strcmp(result, "v4"), 0);
+
+        // act - should NOT trigger any rehashing
+        added = strukts_hashmap_add(&dict, "k5", "v5");
+        result = strukts_hashmap_get(dict, "k5");
+
+        // assert
+        EXPECT_TRUE(added);
+        EXPECT_EQ(dict->size, 5);
+        EXPECT_EQ(dict->capacity, 8);  // NO rehashing (same capacity)
+        EXPECT_EQ(strcmp(result, "v5"), 0);
+
+        strukts_hashmap_free(dict);
     }
 }  // namespace
