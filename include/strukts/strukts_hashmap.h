@@ -17,8 +17,13 @@ extern "C" {
 
 #include "strukts_linkedlist.h"
 
-#define STRUKTS_HASHMAP_LOAD_FACTOR 0.7
-#define STRUKTS_HASHMAP_INITIAL_BUCKETS_SIZE 8
+#ifdef DEBUG
+#define STRUKTS_HASHMAP_INITIAL_CAPACITY 1
+#else
+#define STRUKTS_HASHMAP_INITIAL_CAPACITY 8
+#endif
+
+#define STRUKTS_HASHMAP_MAX_LOAD_FACTOR 0.7
 
 /**
  * Represents a hash map (a.k.a as hash tables or symbol tables) using "separate chaining"
@@ -28,8 +33,8 @@ typedef struct _StruktsHashmap StruktsHashmap;
 
 struct _StruktsHashmap {
     size_t size;
-    size_t buckets_size;
-    StruktsLinkedList* buckets[STRUKTS_HASHMAP_INITIAL_BUCKETS_SIZE];
+    size_t capacity;             /* amount of available buckets */
+    StruktsLinkedList** buckets; /* pointer to an array of lists pointers (buckets) */
 };
 
 /**
@@ -40,15 +45,22 @@ struct _StruktsHashmap {
 StruktsHashmap* strukts_hashmap_new();
 
 /**
+ * Deallocates all memory previously allocated by the hashmap and its inner structures.
+ *
+ * @param hashmap is the hash map to deallocate.
+ */
+void strukts_hashmap_free(StruktsHashmap* hashmap);
+
+/**
  * Adds a new key (and its value) to a hash map.
  *
- * @param hashmap is a pointer to hashmap.
+ * @param hashmap is the address of a hashmap pointer.
  * @param key is a pointer to a string key.
  * @param value is a pointer to a string value.
  *
  * @return true if the key/value has been added to the hashmap. False, otherwise.
  */
-bool strukts_hashmap_add(StruktsHashmap* hashmap, const char* key, const char* value);
+bool strukts_hashmap_add(StruktsHashmap** hashmap, const char* key, const char* value);
 
 /**
  * Searches for a given key in the hash map and returns its value if the key was found.
