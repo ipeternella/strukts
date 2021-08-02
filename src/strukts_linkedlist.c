@@ -71,7 +71,7 @@ bool strukts_linkedlist_append(StruktsLinkedList* list, const char* key, const c
     }
 
     new_node->previous = list->last_node;
-    list->last_node->next = new_node;  // !
+    list->last_node->next = new_node;
     list->last_node = new_node;
     list->size++;
 
