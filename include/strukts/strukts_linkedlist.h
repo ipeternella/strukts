@@ -63,6 +63,13 @@ struct _StruktsLinearSearchResult {
 StruktsLinkedList* strukts_linkedlist_new();
 
 /**
+ * Deallocates all memory previously allocated by all nodes in the linked list.
+ *
+ * @param list is the linked list to deallocate.
+ */
+void strukts_linkedlist_free(StruktsLinkedList* list);
+
+/**
  * Allocates a new node and inserts it at the beginning (prepends) of the linked list. For adding
  * a node whose key is equal to its value, use the macro strukts_linkedlist_prependkv(list, key).
  * This function does not modify the contents of key and value pointers.
@@ -125,13 +132,6 @@ bool strukts_linkedlist_remove(StruktsLinkedList* list, const char* key);
  * and its position.
  */
 StruktsLinearSearchResult strukts_linkedlist_find(StruktsLinkedList* list, const char* key);
-
-/**
- * Deallocates all memory previously allocated by all nodes in the linked list.
- *
- * @param list is the searched linked list.
- */
-void strukts_linkedlist_free(StruktsLinkedList* list);
 
 #ifdef __cplusplus
 }
