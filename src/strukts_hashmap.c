@@ -23,6 +23,11 @@ static StruktsHashmap* strukts_hashmap_new_sized(size_t capacity) {
 
     if (hashmap == NULL) return NULL;
 
+    /* these variables MUST have been set in case any malloc fails so that
+     * strukts_hashmap_free() works fine */
+    hashmap->capacity = capacity;
+    hashmap->size = 0;
+
     /* allocates an array of pointers to buckets lists */
     hashmap->buckets = (StruktsLinkedList**)malloc(capacity * sizeof(StruktsLinkedList*));
 
@@ -32,22 +37,23 @@ static StruktsHashmap* strukts_hashmap_new_sized(size_t capacity) {
         return NULL;
     }
 
-    /* initialize array of linked lists for separate chaining resolution */
+    /* initialize array of linked lists to NULL first (trading performance for readability) */
+    for (size_t i = 0; i < capacity; i++) {
+        hashmap->buckets[i] = NULL;
+    }
+
     for (size_t i = 0; i < capacity; i++) {
         StruktsLinkedList* list = strukts_linkedlist_new();
 
         /* if an allocation error happens here, stop and free everything so far */
         if (list == NULL) {
-            strukts_hashmap_free(hashmap);
+            strukts_hashmap_free(hashmap); /* requires hashmap->capacity initialization */
 
             return NULL;
         }
 
         hashmap->buckets[i] = list;
     }
-
-    hashmap->capacity = capacity; /* amount of buckets slots */
-    hashmap->size = 0;            /* amount of keys in the hashmap  */
 
     return hashmap;
 }
@@ -95,7 +101,8 @@ void strukts_hashmap_free(StruktsHashmap* hashmap) {
 
     StruktsLinkedList* list;
 
-    /* deallocate all linked lists of the current hashmap used for collision resolution */
+    /* deallocates all linked lists of the current hashmap used for collision resolution. Notice
+     * that if hashmap != NULL, hashmap->capacity is ALWAYS initialized and hashmap->buckets TOO! */
     for (size_t i = 0; i < hashmap->capacity; i++) {
         list = hashmap->buckets[i];  // grab a pointer to a linked list
 
