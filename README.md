@@ -1,6 +1,15 @@
 <h1 align="center">Strukts!</h1>
 
 <p align="left">
+  <img alt="Quality Gate Status" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=alert_status">
+  <img alt="Maintanability Rate" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=sqale_rating">
+  <img alt="Security Rate" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=security_rating">
+  <img alt="Technical Debt" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=sqale_index">
+  <img alt="Vulnerabilities" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=vulnerabilities">
+  <img alt="Code Smells" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=code_smells">
+</p>
+
+<p align="left">
   <img alt="C" src="https://img.shields.io/badge/c-%2300599C.svg?style=for-the-badge&logo=c&logoColor=white"/>
   <img alt="C++" src="https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white"/>
   <img alt="CMake" src="https://img.shields.io/badge/CMake-%23008FBA.svg?style=for-the-badge&logo=cmakelogoColor=white">
