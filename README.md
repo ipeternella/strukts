@@ -15,10 +15,6 @@
   <img alt="CMake" src="https://img.shields.io/badge/CMake-%23008FBA.svg?style=for-the-badge&logo=cmakelogoColor=white">
 </p>
 
-<p align="left">
-  <img src="https://sonarcloud.io/images/project_badges/sonarcloud-white.svg">
-</p>
-
 <p align="center"><img src="docs/strukts.png"></p>
 
 ## Table of Contents
