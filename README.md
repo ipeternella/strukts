@@ -2,7 +2,8 @@
 
 <p align="left">
   <img alt="Quality Gate Status" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=alert_status">
-  <img alt="Maintanability Rate" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=sqale_rating">
+  <img alt="Maintainability Rate" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=sqale_rating">
+  <img alt="Reliability Rate" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=reliability_rating">
   <img alt="Security Rate" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=security_rating">
   <img alt="Technical Debt" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=sqale_index">
   <img alt="Vulnerabilities" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=vulnerabilities">
