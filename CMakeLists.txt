@@ -37,7 +37,7 @@ if(WITH_TEST)
 
     add_subdirectory(src)
     add_subdirectory(tests)
-elseif()
+else()
     set(CMAKE_C_FLAGS "-g -Wall -Wextra")
     add_subdirectory(src)
 endif()
