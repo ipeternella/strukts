@@ -6,10 +6,9 @@ enable_testing()
 
 # source file globs
 file(GLOB strukts_test_files *.cpp)
-file(GLOB strukts_src_files ${Strukts_SOURCE_DIR}/src/*.c)
 
 # CXX compiler flags
-set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra --coverage")
 
 # dependency: googletest
 FetchContent_Declare(googletest
@@ -26,10 +25,10 @@ endif ()
 add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 
 # build final binary
-add_executable(test ${strukts_src_files} ${safemalloc_src} ${strukts_test_files})
+add_executable(test ${strukts_test_files})
 
 # links specific libraries to the final binary
-target_link_libraries(test gtest gtest_main)  # g++ -lgtest -lgtest_main
+target_link_libraries(test gtest gtest_main safemalloc strukts)  # g++ -lgtest -lgtest_main -lsafemalloc -lstrukts
 
 # adds gtests
 gtest_add_tests(TARGET test)
