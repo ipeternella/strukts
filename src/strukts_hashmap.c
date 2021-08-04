@@ -19,6 +19,8 @@ static bool is_rehashing_needed(StruktsHashmap* hashmap) {
 }
 
 static StruktsHashmap* strukts_hashmap_new_sized(size_t capacity) {
+    if (capacity == 0) return NULL; /* impossible allocation */
+
     StruktsHashmap* hashmap = (StruktsHashmap*)malloc(sizeof(StruktsHashmap));
 
     if (hashmap == NULL) return NULL;
