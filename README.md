@@ -5,8 +5,8 @@
   <img alt="Maintainability Rate" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=sqale_rating">
   <img alt="Reliability Rate" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=reliability_rating">
   <img alt="Security Rate" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=security_rating">
+  <img alt="Coverage" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=coverage">
   <img alt="Vulnerabilities" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=vulnerabilities">
-  <img alt="Code Smells" src="https://sonarcloud.io/api/project_badges/measure?project=strukts&metric=code_smells">
 </p>
 
 <p align="left">

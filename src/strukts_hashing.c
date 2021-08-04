@@ -7,7 +7,7 @@
 /* rotates value to left by amount times (also known as circular shift) */
 static uint32_t strukts_rotate_left(uint32_t value, uint8_t amount) {
     /* undef behavior for 0 or 32 */
-    if (amount<1 | amount> 31) exit(EXIT_FAILURE);
+    if ((amount < 1) | (amount > 31)) exit(EXIT_FAILURE);
 
     return value << amount | value >> (32 - amount);
 }
