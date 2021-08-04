@@ -28,7 +28,7 @@ add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 add_executable(test ${strukts_test_files})
 
 # links specific libraries to the final binary
-target_link_libraries(test gtest gtest_main safemalloc strukts)  # g++ -lgtest -lgtest_main -lsafemalloc -lstrukts
+target_link_libraries(test gtest gtest_main strukts safemalloc)  # g++ -lgtest -lgtest_main -lsafemalloc -lstrukts
 
 # adds gtests
 gtest_add_tests(TARGET test)
