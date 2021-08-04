@@ -21,11 +21,12 @@
 
 - [Strukts](#Strukts)
   - [Objective](#Objective)
-  - [Memory Safety](#Memory-Safety)
+  - [Code Quality And Memory Safety](#Code-Quality-And-Memory-Safety)
   - [Requirements](#Requirements)
   - [Dependencies](#Dependencies)
 - [Compiling Strukts](#Compiling-Strukts)
 - [Compiling Tests](#Compiling-Tests)
+- [Compiling Tests with Coverage Metrics](#Compiling-Tests-with-Coverage-Metrics)
 
 ## Strukts
 
@@ -35,9 +36,11 @@ Strukts is a C library with a few useful data structures/algorithms that can be 
 
 Finally, this project is a training ground for exercising some classical algorithms and data structures implementations.
 
-### Memory Safety
+### Code Quality and Memory Safety
 
-Strukts uses an external lib called [safemalloc](https://github.com/Theldus/safemalloc) that is used to provide some degree of memory safety as `safemalloc` warns, during tests, if there are memory leaks (memory that should have been deallocated but was not) and other memory problems.
+Strukts's CICD pipeline builds the project, and its tests, together with SonarCloud in order to generate this repo's badges to assert its quality, safety, maintainability, test coverage metrics, etc. Hence, the badges show the overall project's "health"!
+
+Also, Strukts uses an external lib called [safemalloc](https://github.com/Theldus/safemalloc) that is used to provide some degree of memory safety as `safemalloc` warns, during tests, if there are memory leaks (memory that should have been deallocated but was not) and other memory problems.
 
 As an example, if we comment out the last `free()` invocation inside the function [strukts_linkedlist_free](src/strukts_linkedlist.c) that is responsible for releasing all the allocated heap memory of a linked list, then once we run the tests we should see the following warning:
 
@@ -57,6 +60,7 @@ In order to compile Strukts and its tests, it's necessary to have:
 - C compiler such as `gcc`, `clang`, etc.
 - CMake for building the projects
 - C++ compiler such as `g++`, `clang`, etc. (tests only)
+- `gcov`, `lcov` and `genhtml` (code coverage metrics only)
 
 ### Dependencies
 
@@ -103,3 +107,23 @@ The test binaries can be found at `build/bin/test` which can be used to rerun th
 
 `PS`: When any piece of code changes, running the aforementioned command will compile and run the tests again without
 downloading external dependencies (faster).
+
+## Compiling Tests with Coverage Metrics
+
+The compilation of tests with `CMake` automatically builds the project and its tests with debug symbols which allows code coverage metrics to be calculated (the coverage badge of this repo uses `*.gcov` coverage files created when the CICD pipeline is triggered). However, developers may also want to see coverage metrics on their machines. For this purpose, the [run-tests.sh](scripts/run-tests.sh) shell script was developed! It requires the following programs:
+
+- `gcov`
+- `lcov`
+- `genhtml`
+
+The shell script will use these programs to generate coverage metrics and to create a developer-friendly html page with coverage metrics such as the one shown below:
+
+![Strukts HTML Coverage Example](docs/coverage.png)
+
+To use the script, just start an interactive bash session at the root of this repo and run the following command:
+
+```sh
+./scripts/run-tests.sh  # requires file permission to be +x at least (executable)
+```
+
+The script will compile and run tests with `CMake` and use the mentioned tools to create a `build/coverage` folder inside this repo's folder with an `index.html` that can be opened to show the developer-friendly coverage metrics.
