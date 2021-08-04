@@ -5,9 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sfmalloc.h"
-
 #ifdef DEBUG
+#include "sfmalloc.h"
 #define malloc sf_malloc
 #define free sf_free
 #endif

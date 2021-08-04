@@ -4,11 +4,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "sfmalloc.h"
 #include "strukts_hashing.h"
 #include "strukts_linkedlist.h"
 
 #ifdef DEBUG
+#include "sfmalloc.h"
 #define malloc sf_malloc
 #define free sf_free
 #endif
