@@ -15,7 +15,7 @@
 
 static bool is_rehashing_needed(const StruktsHashmap* hashmap) {
     /* current load factor = hashmap->size / (float)hashmap->capacity */
-    return hashmap->size / (double)hashmap->capacity >= STRUKTS_HASHMAP_MAX_LOAD_FACTOR;
+    return (float)hashmap->size / (float)hashmap->capacity >= STRUKTS_HASHMAP_MAX_LOAD_FACTOR;
 }
 
 static StruktsHashmap* strukts_hashmap_new_sized(size_t capacity) {
@@ -119,7 +119,7 @@ void strukts_hashmap_free(StruktsHashmap* hashmap) {
     free(hashmap);
 }
 
-bool strukts_hashmap_add(StruktsHashmap** hashmap_ptr, const char* key, const char* value) {
+bool strukts_hashmap_add(StruktsHashmap** hashmap_ptr, const char* key, char* value) {
     if (is_rehashing_needed(*hashmap_ptr)) {
         /* reallocate bigger hash table and rehash all keys */
         StruktsHashmap* resized_hashmap = rehash(*hashmap_ptr);

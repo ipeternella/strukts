@@ -18,9 +18,6 @@ extern "C" {
 #include <stdbool.h>
 #include <stdlib.h>
 
-#define strukts_linkedlist_prependkv(list, key) strukts_linkedlist_prepend(list, key, key)
-#define strukts_linkedlist_appendkv(list, key) strukts_linkedlist_append(list, key, key)
-
 /**
  * A node to be used in a doubly linked list.
  */
@@ -80,7 +77,7 @@ void strukts_linkedlist_free(StruktsLinkedList* list);
  *
  * @return true if a new node has been added to the beginning of the list; false otherwise.
  */
-bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, const char* value);
+bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, char* value);
 
 /**
  * Allocates a new node and inserts it at the end of the linked list. For adding a node whose
@@ -93,7 +90,7 @@ bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, const 
  *
  * @return true if a new node has been added to the end of the list; false otherwise.
  */
-bool strukts_linkedlist_append(StruktsLinkedList* list, const char* key, const char* value);
+bool strukts_linkedlist_append(StruktsLinkedList* list, const char* key, char* value);
 
 /**
  * Removes the first node from the beginning of a doubly linked list.

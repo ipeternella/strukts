@@ -24,7 +24,7 @@ StruktsLinkedList* strukts_linkedlist_new() {
     return list;
 }
 
-static StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, const char* value) {
+static StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, char* value) {
     StruktsLinkedListNode* new_node = (StruktsLinkedListNode*)malloc(sizeof(StruktsLinkedListNode));
 
     if (new_node == NULL) return NULL;
@@ -33,12 +33,12 @@ static StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, const 
     new_node->next = NULL;
     new_node->previous = NULL;
     new_node->key = key;
-    new_node->value = (char*)value;
+    new_node->value = value;
 
     return new_node;
 }
 
-bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, const char* value) {
+bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, char* value) {
     StruktsLinkedListNode* new_node = strukts_linkedlistnode_new(key, value);
 
     if (new_node == NULL) return false;
@@ -56,7 +56,7 @@ bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, const 
     return true;
 }
 
-bool strukts_linkedlist_append(StruktsLinkedList* list, const char* key, const char* value) {
+bool strukts_linkedlist_append(StruktsLinkedList* list, const char* key, char* value) {
     StruktsLinkedListNode* new_node = strukts_linkedlistnode_new(key, value);
 
     if (new_node == NULL) return false;

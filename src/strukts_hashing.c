@@ -24,7 +24,7 @@ static uint32_t strukts_build_remaining_chunk(const uint8_t* key, uint8_t remain
             memcpy(&final_chunk, key, 2 * sizeof(uint8_t));  // final 2 bytes
             break;
 
-        case 1:
+        default:
             memcpy(&final_chunk, key, sizeof(uint8_t));  // final byte
             break;
     }

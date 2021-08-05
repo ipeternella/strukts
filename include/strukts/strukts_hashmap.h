@@ -64,7 +64,7 @@ void strukts_hashmap_free(StruktsHashmap* hashmap);
  *
  * @return true if the key/value has been added to the hashmap. False, otherwise.
  */
-bool strukts_hashmap_add(StruktsHashmap** hashmap, const char* key, const char* value);
+bool strukts_hashmap_add(StruktsHashmap** hashmap, const char* key, char* value);
 
 /**
  * Searches for a given key in the hash map and returns its value if the key was found.

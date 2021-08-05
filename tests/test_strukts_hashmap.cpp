@@ -14,7 +14,7 @@ namespace {
         StruktsHashmap* dict = strukts_hashmap_new();
 
         // act - add key/value and search the for the key in the hashmap
-        added = strukts_hashmap_add(&dict, "k1", "v1");
+        added = strukts_hashmap_add(&dict, "k1", (char*)"v1");
         value = strukts_hashmap_get(dict, "k1");
 
         // assert
@@ -24,7 +24,7 @@ namespace {
         EXPECT_EQ(strcmp(value, "v1"), 0);
 
         // act - adding new key should rehash keys from capacity 1 to 2^1
-        added = strukts_hashmap_add(&dict, "k2", "v2");
+        added = strukts_hashmap_add(&dict, "k2", (char*)"v2");
         value = strukts_hashmap_get(dict, "k2");
 
         // assert
@@ -34,7 +34,7 @@ namespace {
         EXPECT_EQ(strcmp(value, "v2"), 0);
 
         // act - adding new key should rehash keys from capacity 2ˆ1 to 2^2
-        added = strukts_hashmap_add(&dict, "k3", "v3");
+        added = strukts_hashmap_add(&dict, "k3", (char*)"v3");
         value = strukts_hashmap_get(dict, "k3");
 
         // assert
@@ -44,7 +44,7 @@ namespace {
         EXPECT_EQ(strcmp(value, "v3"), 0);
 
         // act - adding new key should rehash keys from capacity 2^2 to 2^3
-        added = strukts_hashmap_add(&dict, "k4", "v4");
+        added = strukts_hashmap_add(&dict, "k4", (char*)"v4");
         value = strukts_hashmap_get(dict, "k4");
 
         // assert
@@ -54,7 +54,7 @@ namespace {
         EXPECT_EQ(strcmp(value, "v4"), 0);
 
         // act - adding new key for current load factor should NOT trigger new rehashing
-        added = strukts_hashmap_add(&dict, "k5", "v5");
+        added = strukts_hashmap_add(&dict, "k5", (char*)"v5");
         value = strukts_hashmap_get(dict, "k5");
 
         // assert
