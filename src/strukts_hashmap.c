@@ -13,9 +13,9 @@
 #define free sf_free
 #endif
 
-static bool is_rehashing_needed(StruktsHashmap* hashmap) {
+static bool is_rehashing_needed(const StruktsHashmap* hashmap) {
     /* current load factor = hashmap->size / (float)hashmap->capacity */
-    return hashmap->size / (float)hashmap->capacity >= STRUKTS_HASHMAP_MAX_LOAD_FACTOR;
+    return hashmap->size / (double)hashmap->capacity >= STRUKTS_HASHMAP_MAX_LOAD_FACTOR;
 }
 
 static StruktsHashmap* strukts_hashmap_new_sized(size_t capacity) {
@@ -60,7 +60,7 @@ static StruktsHashmap* strukts_hashmap_new_sized(size_t capacity) {
     return hashmap;
 }
 
-static StruktsHashmap* rehash(StruktsHashmap* old_hashmap) {
+static StruktsHashmap* rehash(const StruktsHashmap* old_hashmap) {
     StruktsLinkedList* list;
     StruktsLinkedListNode* current_node;
     StruktsHashmap* new_hashmap = strukts_hashmap_new_sized(2 * old_hashmap->capacity);
@@ -132,7 +132,7 @@ bool strukts_hashmap_add(StruktsHashmap** hashmap_ptr, const char* key, const ch
         *hashmap_ptr = resized_hashmap;
     }
 
-    const uint8_t* key_bytes = (uint8_t*)key;
+    const uint8_t* key_bytes = (const uint8_t*)key;
     const size_t key_len = strlen(key);
     const uint32_t seed = 0;
 
@@ -155,8 +155,8 @@ bool strukts_hashmap_add(StruktsHashmap** hashmap_ptr, const char* key, const ch
     return true;
 }
 
-char* strukts_hashmap_get(StruktsHashmap* hashmap, const char* key) {
-    const uint8_t* key_bytes = (uint8_t*)key;
+char* strukts_hashmap_get(const StruktsHashmap* hashmap, const char* key) {
+    const uint8_t* key_bytes = (const uint8_t*)key;
     const size_t key_len = strlen(key);
     const uint32_t seed = 0;
 

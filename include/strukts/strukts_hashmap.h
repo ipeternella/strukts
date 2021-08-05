@@ -74,7 +74,7 @@ bool strukts_hashmap_add(StruktsHashmap** hashmap, const char* key, const char* 
  *
  * @return a pointer to the key's value if the key was found in the hash map; NULL, otherwise.
  */
-char* strukts_hashmap_get(StruktsHashmap* hashmap, const char* key);
+char* strukts_hashmap_get(const StruktsHashmap* hashmap, const char* key);
 
 #ifdef __cplusplus
 }
