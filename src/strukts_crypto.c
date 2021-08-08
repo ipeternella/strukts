@@ -30,14 +30,12 @@ static void schedule_chunk(BYTE chunk[], WORD schedule[]) {
     short int i, j;
 
     /* moves 4 bytes from chunk[] into 1 word of schedule[] */
-    /* i -> index for schedule[], j -> index for chunk[] */
     for (i = 0, j = 0; i < 16; i++, j += 4) {
         schedule[i] =
             (chunk[j] << 24) | (chunk[j + 1] << 16) | (chunk[j + 2] << 8) | (chunk[j + 3]);
     }
 }
 
-/* only invoked when there's at least 65 bits remaining on the chunk */
 static void add_chunk_padding(BYTE chunk[], short int chunk_position, size_t msg_len,
                               bool append_bit) {
     uint64_t len = msg_len;
@@ -60,6 +58,7 @@ static void process_chunk(StruktsCtxSHA256* ctx, BYTE chunk[]) {
     WORD s0, s1, a, b, c, d, e, f, g, h, ch, tmp1, tmp2, maj;
     WORD schedule[64] = {0};
 
+    /* initial state according to previous iterations */
     a = ctx->h0;
     b = ctx->h1;
     c = ctx->h2;
@@ -72,7 +71,7 @@ static void process_chunk(StruktsCtxSHA256* ctx, BYTE chunk[]) {
     /* moves chunk (512 bits = 16 x 32 bits words) into schedule[0 .. 15] words */
     schedule_chunk(chunk, schedule);
 
-    /* extend chunk to the rest of the schedule */
+    /* extend chunk to the rest of the schedule array */
     for (short int i = 16; i < 64; i++) {
         s0 = rotate_right(schedule[i - 15], 7) ^ rotate_right(schedule[i - 15], 18) ^
              schedule[i - 15] >> 3;
@@ -102,7 +101,7 @@ static void process_chunk(StruktsCtxSHA256* ctx, BYTE chunk[]) {
         a = tmp1 + tmp2;
     }
 
-    /* update sha256 ctx for next chunk */
+    /* update sha256 state for next chunk */
     ctx->h0 += a;
     ctx->h1 += b;
     ctx->h2 += c;
