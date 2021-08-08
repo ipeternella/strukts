@@ -74,7 +74,7 @@ static void sha256_add_chunk_padding(BYTE chunk[], short int chunk_position, siz
     }
 }
 
-static void sha256_process_chunk(StruktsCtxSHA256* ctx, BYTE chunk[]) {
+static void sha256_process_chunk(StruktsCtxSHA256* ctx, const BYTE chunk[]) {
     WORD s0, s1, a, b, c, d, e, f, g, h, ch, tmp1, tmp2, maj;
     WORD schedule[64] = {0};
 
