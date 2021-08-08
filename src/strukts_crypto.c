@@ -45,7 +45,7 @@ static inline StruktsCtxSHA256 strukts_ctx_sha256_new() {
 }
 
 /********************** STATIC FUNCTIONS **********************/
-static void schedule_chunk(BYTE chunk[], WORD schedule[]) {
+static void schedule_chunk(const BYTE chunk[], WORD schedule[]) {
     short int i;
     short int j;
 
