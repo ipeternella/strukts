@@ -54,7 +54,7 @@ static void add_chunk_padding(BYTE chunk[], short int chunk_position, size_t msg
     }
 }
 
-static void process_chunk(StruktsCtxSHA256* ctx, BYTE chunk[]) {
+static void sha256_process_chunk(StruktsCtxSHA256* ctx, BYTE chunk[]) {
     WORD s0, s1, a, b, c, d, e, f, g, h, ch, tmp1, tmp2, maj;
     WORD schedule[64] = {0};
 
@@ -175,7 +175,7 @@ BYTE* strukts_crypto_sha256(const BYTE msg[], size_t msg_len) {
             chunk_position = 0;
             amount_chunks++;
 
-            process_chunk(&sha256_ctx, chunk);
+            sha256_process_chunk(&sha256_ctx, chunk);
         }
     }
 
@@ -186,7 +186,7 @@ BYTE* strukts_crypto_sha256(const BYTE msg[], size_t msg_len) {
         chunk[chunk_position] = 1;
         chunk[chunk_position] <<= 7;
 
-        process_chunk(&sha256_ctx, chunk);
+        sha256_process_chunk(&sha256_ctx, chunk);
 
         /* new block required */
         chunk_position = 0;
@@ -194,11 +194,11 @@ BYTE* strukts_crypto_sha256(const BYTE msg[], size_t msg_len) {
 
         initialize_chunk(chunk, chunk_position);
         add_chunk_padding(chunk, chunk_position, msg_len, false);
-        process_chunk(&sha256_ctx, chunk);
+        sha256_process_chunk(&sha256_ctx, chunk);
     } else {
         /* no new block required (complete chunk falls here too) */
         add_chunk_padding(chunk, chunk_position, msg_len, true);
-        process_chunk(&sha256_ctx, chunk);
+        sha256_process_chunk(&sha256_ctx, chunk);
     }
 
     /* use final ctx to build the final 256-bit hash value */
