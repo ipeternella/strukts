@@ -7,6 +7,14 @@
  *
  * Unlike non-crypto hashes, crypto ones are designed for security characteristics
  * such as preimage resistance (hard to be reversed by an adversary), etc.
+ *
+ * Observations:
+ *
+ * The SHA-256 algorithm can be found on NIST's page (along with some test/validation data):
+ * https://csrc.nist.gov/csrc/media/publications/fips/180/2/archive/2002-08-01/documents/fips180-2.pdf
+ *
+ * This modest SHA-256's implementation was improved based on Brad Conte's implementation:
+ * https://github.com/B-Con/crypto-algorithms/blob/master/sha256.c
  */
 
 #ifndef STRUKTS_CRYPTO_H
@@ -21,26 +29,13 @@ extern "C" {
 #include "strukts_types.h"
 
 /**
- * Represents the state/context of the SHA256 hashing algorithm.
- */
-typedef struct {
-    WORD h0;
-    WORD h1;
-    WORD h2;
-    WORD h3;
-    WORD h4;
-    WORD h5;
-    WORD h6;
-    WORD h7;
-} StruktsCtxSHA256;
-
-/**
  * Hashes a message using the SHA-256 crypto-hashing function from the SHA-2 family.
  *
  * @param msg is the byte array of the message
  * @param msg_len is the amount of bytes in the message
  *
- * @return the digest (hash value) as a pointer to a byte array of 256 bits (array of 32 indexes).
+ * @return the digest (hash value) as a calloc'd pointer to a byte array of 256 bits whose
+ * length is 32.
  */
 BYTE* strukts_crypto_sha256(const BYTE msg[], size_t msg_len);
 

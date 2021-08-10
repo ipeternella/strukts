@@ -25,6 +25,18 @@ static const WORD SCHEDULE_CONSTANTS[64] = {
 #define ROTATIONS_0(x) (ROTATE_RIGHT(x, 2) ^ ROTATE_RIGHT(x, 13) ^ ROTATE_RIGHT(x, 22))
 #define ROTATIONS_1(x) (ROTATE_RIGHT(x, 6) ^ ROTATE_RIGHT(x, 11) ^ ROTATE_RIGHT(x, 25))
 
+/********************** PRIVATE STRUCTS **********************/
+typedef struct {
+    WORD h0;
+    WORD h1;
+    WORD h2;
+    WORD h3;
+    WORD h4;
+    WORD h5;
+    WORD h6;
+    WORD h7;
+} StruktsCtxSHA256;
+
 /********************** STATIC INLINE FUNCTIONS **********************/
 static inline void sha256_fill_block(BYTE block[], short int block_position) {
     for (short int i = block_position; i < 64; i++) block[i] = 0;
