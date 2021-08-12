@@ -101,7 +101,7 @@ static void sha256_process_block(StruktsCtxSHA256* ctx, const BYTE block[]) {
         schedule[i] =
             schedule[i - 16] + S0(schedule[i - 15]) + schedule[i - 7] + S1(schedule[i - 2]);
 
-    /* SHA-256 compression part */
+    /* Davies-Meyer single-block-length of 512 bits compression */
     for (short int i = 0; i < 64; i++) {
         tmp1 = h + ROTATIONS_1(e) + CH(e, f, g) + SCHEDULE_CONSTANTS[i] + schedule[i];
         tmp2 = ROTATIONS_0(a) + MAJ(a, b, c);
@@ -157,12 +157,16 @@ BYTE* strukts_crypto_sha256(const BYTE msg[], size_t msg_len) {
     short int block_position = 0; /* up to 64 (64 bytes = 512 bits) */
     BYTE block[64] = {0};         /* stores 512-bit blocks */
 
-    /* processes all bytes of the original msg */
+    /*
+     * Merkle-Damgard's iterative hashing which processes all bytes of
+     * the original msg in blocks of 512 bits using a sequence of
+     * Davies-Meyer compresssion functions.
+     */
     for (size_t i = 0; i < msg_len; i++) {
-        /* building the 512-bit block */
+        /* starts building a 512-bit block */
         block[block_position++] = msg[i];
 
-        /* 512 bits (64 bytes) complete block has been created */
+        /* 512 bits (64 bytes) complete block has been built */
         if (block_position == 64) {
             block_position = 0;
             sha256_process_block(&sha256_ctx, block);
