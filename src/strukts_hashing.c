@@ -31,7 +31,7 @@ static inline WORD mur(WORD hash, WORD block, bool final_rotate) {
     return hash;
 }
 
-static inline final_avalanche(WORD hash, size_t key_len) {
+static inline WORD final_avalanche(WORD hash, size_t key_len) {
     /*
      * Final avalanche to guarantee that if a single bit of the key is changed,
      * then at least 50% of the final hash value is also changed.
