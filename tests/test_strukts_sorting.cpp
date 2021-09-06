@@ -1,6 +1,5 @@
 #include <stdint.h>
 #include <stdio.h>
-#include <string.h>
 
 #include "gtest/gtest.h"
 #include "strukts_sorting.h"
@@ -19,7 +18,7 @@ namespace
         /* assert */
         int sorted_a[] = {1, 2, 3, 4, 5, 6};
 
-        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(0 == memcmp(a, sorted_a, len * sizeof(int)));
         EXPECT_TRUE(success);
     }
 
@@ -35,7 +34,7 @@ namespace
         /* assert */
         int sorted_a[] = {1, 2, 3, 3, 4, 5};
 
-        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(0 == memcmp(a, sorted_a, len * sizeof(int)));
         EXPECT_TRUE(success);
     }
 
@@ -51,7 +50,7 @@ namespace
         /* assert */
         int sorted_a[] = {-1, 7};
 
-        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(0 == memcmp(a, sorted_a, len * sizeof(int)));
         EXPECT_TRUE(success);
     }
 
@@ -67,7 +66,7 @@ namespace
         /* assert */
         int sorted_a[] = {7};
 
-        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(0 == memcmp(a, sorted_a, len * sizeof(int)));
         EXPECT_TRUE(success);
     }
 
@@ -83,7 +82,7 @@ namespace
         /* assert */
         int sorted_a[] = {1, 2, 3, 4, 5, 6};
 
-        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(0 == memcmp(a, sorted_a, len * sizeof(int)));
         EXPECT_TRUE(success);
     }
 
@@ -99,7 +98,7 @@ namespace
         /* assert */
         int sorted_a[] = {-1, 2, 3, 3};
 
-        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(0 == memcmp(a, sorted_a, len * sizeof(int)));
         EXPECT_TRUE(success);
     }
 
@@ -115,7 +114,7 @@ namespace
         /* assert */
         int sorted_a[] = {-1, 7};
 
-        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(0 == memcmp(a, sorted_a, len * sizeof(int)));
         EXPECT_TRUE(success);
     }
 
@@ -131,7 +130,7 @@ namespace
         /* assert */
         int sorted_a[] = {7};
 
-        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(0 == memcmp(a, sorted_a, len * sizeof(int)));
         EXPECT_TRUE(success);
     }
 }  // namespace
