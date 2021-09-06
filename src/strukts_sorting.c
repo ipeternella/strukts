@@ -38,7 +38,7 @@ static bool strukts_mergesort_merge(int a[], size_t p, size_t q, size_t r)
 
     /*
      * pick smaller values from each sub array until are no elements left in order to effectively
-     * merge the sorted subarrays into a newly merged and sorted one (hence, mergesort)
+     * merge the two already sorted subarrays into a newly sorted array
      */
     size_t i = 0;
     size_t j = 0;
@@ -62,10 +62,10 @@ static bool strukts_mergesort_merge(int a[], size_t p, size_t q, size_t r)
 static inline bool strukts_mergesort(int a[], size_t p, size_t r)
 {
     /*
-     * Implementation of divide and conquer with mergesort. One point to notice is that
-     * the merge operation contains heap allocations that may fail. As such, the internal
-     * procedures return booleans that indicates if any allocation has failed. If that's
-     * the case, then the sorting function stops and returns false.
+     * Implementation of divide and conquer strategy with mergesort. One point to notice
+     * is that the merge operation contains heap allocations that may fail. As such, the
+     * internal procedures return booleans that indicates if any allocation has failed.
+     * If that's the case, then the sorting function stops and returns false.
      */
     if (p < r) {
         size_t q = (p + r) / 2; /* int division ~ floor operation */
@@ -78,7 +78,7 @@ static inline bool strukts_mergesort(int a[], size_t p, size_t r)
         if (!strukts_mergesort(a, q + 1, r))
             return false;
 
-        /* .. and conquer: start merging the smaller problems results */
+        /* .. and conquer: start merging the smaller solved (sorted) problems */
         if (!strukts_mergesort_merge(a, p, q, r))
             return false; /* merge contains allocations that may fail, stop if it happens */
     }
