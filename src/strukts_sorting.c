@@ -83,7 +83,7 @@ static inline bool strukts_mergesort_helper(int a[], size_t p, size_t r)
             return false; /* merge contains allocations that may fail, stop if it happens */
     }
 
-    /* base recursion case: if (p >= r), then the array is already sorted and we're good to go! */
+    /* base recursion case: already is already sorted */
     return true;
 }
 
@@ -104,11 +104,10 @@ bool strukts_sorting_insertionsort(int a[], int len)
     if (len == 1)
         return true;
 
-    int i = 0;
     int j = 0;
     int key = 0;
 
-    for (i = 1; i < len; i++) {
+    for (int i = 1; i < len; i++) {
         key = a[i];
 
         /* shift right all keys that are bigger than current key */
