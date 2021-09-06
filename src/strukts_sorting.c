@@ -59,7 +59,7 @@ static bool strukts_mergesort_merge(int a[], size_t p, size_t q, size_t r)
     return true;
 }
 
-static inline bool strukts_mergesort(int a[], size_t p, size_t r)
+static inline bool strukts_mergesort_helper(int a[], size_t p, size_t r)
 {
     /*
      * Implementation of divide and conquer strategy with mergesort. One point to notice
@@ -71,11 +71,11 @@ static inline bool strukts_mergesort(int a[], size_t p, size_t r)
         size_t q = (p + r) / 2; /* int division ~ floor operation */
 
         /* divide the problem: left subarray */
-        if (!strukts_mergesort(a, p, q))
+        if (!strukts_mergesort_helper(a, p, q))
             return false;
 
         /* right subarray */
-        if (!strukts_mergesort(a, q + 1, r))
+        if (!strukts_mergesort_helper(a, q + 1, r))
             return false;
 
         /* .. and conquer: start merging the smaller solved (sorted) problems */
@@ -90,17 +90,17 @@ static inline bool strukts_mergesort(int a[], size_t p, size_t r)
 /********************** SORTING PUBLIC FUNCTIONS **********************/
 bool strukts_sorting_mergesort(int a[], size_t len)
 {
+    /* trivial case */
+    if (len == 1)
+        return true;
+
     /* calls internal static procedure to ease the use */
-    return strukts_mergesort(a, 0, len - 1);
+    return strukts_mergesort_helper(a, 0, len - 1);
 }
 
 bool strukts_sorting_insertionsort(int a[], int len)
 {
-    /* unexpected len */
-    if (len < 1)
-        return false;
-
-    /* nothing to be done */
+    /* trivial case */
     if (len == 1)
         return true;
 

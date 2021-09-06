@@ -55,6 +55,22 @@ namespace
         EXPECT_TRUE(success);
     }
 
+    TEST(STRUKTS_SORTING_SUITE, SHOULD_SORT_ARRAY_1_ELEMENTS_WITH_INSERTIONSORT)
+    {
+        /* arrange */
+        int a[] = {7};
+        size_t len = 1;
+
+        /* act */
+        bool success = strukts_sorting_insertionsort(a, len);
+
+        /* assert */
+        int sorted_a[] = {7};
+
+        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(success);
+    }
+
     TEST(STRUKTS_SORTING_SUITE, SHOULD_SORT_ARRAY_WITH_MERGESORT)
     {
         /* arrange */
@@ -98,6 +114,22 @@ namespace
 
         /* assert */
         int sorted_a[] = {-1, 7};
+
+        EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
+        EXPECT_TRUE(success);
+    }
+
+    TEST(STRUKTS_SORTING_SUITE, SHOULD_SORT_ARRAY_1_ELEMENTS_WITH_MERGESORT)
+    {
+        /* arrange */
+        int a[] = {7};
+        size_t len = 1;
+
+        /* act */
+        bool success = strukts_sorting_mergesort(a, len);
+
+        /* assert */
+        int sorted_a[] = {7};
 
         EXPECT_TRUE(0 == std::memcmp(a, sorted_a, len * sizeof(int)));
         EXPECT_TRUE(success);
