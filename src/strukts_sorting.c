@@ -83,7 +83,7 @@ static inline bool strukts_mergesort_helper(int a[], size_t p, size_t r)
             return false; /* merge contains allocations that may fail, stop if it happens */
     }
 
-    /* base recursion case: already is already sorted */
+    /* base recursion case: array is already sorted */
     return true;
 }
 
