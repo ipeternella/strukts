@@ -48,12 +48,12 @@ StruktsHeapChildResult strukts_heap_get_child(StruktsMaxHeap heap, size_t parent
     return result;
 }
 
-int strukts_heap_get_parent(StruktsMaxHeap heap, size_t i)
+int strukts_heap_get_parent(StruktsMaxHeap heap, size_t child_i)
 {
-    if (i % 2 == 0) /* even indexes */
-        return heap.array[i / 2 - 1];
+    if (child_i % 2 == 0) /* even indexes */
+        return heap.array[child_i / 2 - 1];
 
-    return heap.array[i / 2];
+    return heap.array[child_i / 2];
 }
 
 void strukts_heap_max_heapify(StruktsMaxHeap heap, size_t parent_i)

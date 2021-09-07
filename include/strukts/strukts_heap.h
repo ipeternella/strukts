@@ -66,7 +66,7 @@ StruktsMaxHeap strukts_heap_maxheap_new(int a[], size_t len);
  * heap. Roughly works like a 'maybe' monad.
  *
  * @param heap is a max-heap struct.
- * @param i is the index of the parent node whose child will be searched for.
+ * @param parent_i is the index of the parent node whose child will be searched for.
  * @param left_child boolean which indicates to get the left child; if false, returns the right
  * child.
  *
@@ -74,17 +74,18 @@ StruktsMaxHeap strukts_heap_maxheap_new(int a[], size_t len);
  * its position and whether this is a valid result or not (within the bondaries of the array of the
  * heap). If valid is set to false, both the value and position should not be used.
  */
-StruktsHeapChildResult strukts_heap_get_child(StruktsMaxHeap heap, size_t i, bool left_child);
+StruktsHeapChildResult strukts_heap_get_child(StruktsMaxHeap heap, size_t parent_i,
+                                              bool left_child);
 
 /**
  * Gets the parent's value of a given child node that can be found in index i.
  *
  * @param heap is a max-heap struct.
- * @param i is the index of the child node whose parent will be searched for.
+ * @param child_i is the index of the child node whose parent will be searched for.
  *
  * @return the value of the parent node.
  */
-int strukts_heap_get_parent(StruktsMaxHeap heap, size_t i);
+int strukts_heap_get_parent(StruktsMaxHeap heap, size_t child_i);
 
 /**
  * Heapifies (mutates) the heap's array in order to guarantee the max-heap structure in which
@@ -96,9 +97,9 @@ int strukts_heap_get_parent(StruktsMaxHeap heap, size_t i);
  * (tree).
  *
  * @param heap is a max-heap struct.
- * @param i is the index of the desired 'node' to begin heapifying from.
+ * @param parent_i is the index of the desired 'parent node' to begin heapifying from.
  */
-void strukts_heap_max_heapify(StruktsMaxHeap heap, size_t i);
+void strukts_heap_max_heapify(StruktsMaxHeap heap, size_t parent_i);
 
 #ifdef __cplusplus
 }
