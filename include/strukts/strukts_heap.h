@@ -24,7 +24,7 @@ extern "C" {
 #define SWAP(arr, i, j) \
     int old = arr[i];   \
     arr[i] = arr[j];    \
-    arr[j] = old;
+    arr[j] = old
 
 /**
  * Represents a max-heap data structure in which an array can be viewed as a binary tree.
