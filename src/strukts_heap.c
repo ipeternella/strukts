@@ -15,12 +15,12 @@ StruktsMaxHeap strukts_heap_maxheap_new(int a[], size_t len)
      * fetching children from each parent and as children stay, roughly,
      * at the index (2 * parent_i), these children would be invalid as they
      * would be outside the heap array size boundaries.
+     *
+     * The loop uses a trick to avoid underflow of a size_t which is always >= 0.
      */
-    for (size_t parent_i = len / 2; parent_i >= 0; parent_i--) {
+    for (size_t i = 0; i <= len / 2; i++) {
+        size_t parent_i = len / 2 - i; /* trick for reverse iterating with size_t */
         strukts_heap_max_heapify(max_heap, parent_i);
-
-        if (parent_i == 0)
-            break; /* size_t underflows when i == 0 */
     }
 
     return max_heap;
