@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "strukts_heap.h"
+
 /********************** MACROS **********************/
 #define INF INT_MAX
 
@@ -59,7 +61,7 @@ static bool strukts_mergesort_merge(int a[], size_t p, size_t q, size_t r)
     return true;
 }
 
-static inline bool strukts_mergesort_helper(int a[], size_t p, size_t r)
+static bool strukts_mergesort_helper(int a[], size_t p, size_t r)
 {
     /*
      * Implementation of divide and conquer strategy with mergesort. One point to notice
@@ -96,6 +98,23 @@ bool strukts_sorting_mergesort(int a[], size_t len)
 
     /* calls internal static procedure to ease the use */
     return strukts_mergesort_helper(a, 0, len - 1);
+}
+
+bool strukts_sorting_heapsort(int a[], size_t len)
+{
+    /* builds a max-heap structure from the array to be sorted */
+    StruktsMaxHeap heap = strukts_heap_maxheap_new(a, len);
+
+    /* keep swapping the first node (biggest) with the last element and reheapifying the array */
+    for (size_t i = 0; i < len - 1; i++) {
+        SWAP(heap.array, 0, heap.size - 1); /* swap the first node with the last one */
+        heap.size--;
+
+        /* reorganize the heap after the swap: possible smaller value at the root */
+        strukts_heap_max_heapify(heap, 0);
+    }
+
+    return true;
 }
 
 bool strukts_sorting_insertionsort(int a[], int len)
