@@ -31,7 +31,7 @@ main() {
 
     echo "[Strukts] => Running gcov on .gcno files (can be useful)..."
     cd src/CMakeFiles/strukts.dir
-    gcov "*.gcno"
+    gcov *.gcno
     cd ../../../
 
     echo "[Strukts] => Running genhtml..."
