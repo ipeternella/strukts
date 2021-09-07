@@ -33,7 +33,7 @@ target_link_libraries(test gtest gtest_main strukts safemalloc)  # g++ -lgtest -
 # adds gtests
 gtest_add_tests(TARGET test)
 
-# runs tests
+# runs tests -> due to debugger problems with CMake, invoke the test binary manually after compilation
 # add_custom_command(TARGET test
 #                    POST_BUILD
 #                    COMMAND ${CMAKE_BINARY_DIR}/bin/test)
