@@ -24,7 +24,7 @@ main() {
     mkdir ${COVERAGE_DIR}
 
     echo "[Strukts] => CMaking project and running tests with coverage..."
-    cmake -DWITH_TEST=ON .. && make test && ./bin/test
+    cmake -DWITH_TEST=ON .. && make test
 
     echo "[Strukts] => Running lcov to gather .gcno files..."
     lcov --capture --directory src --output-file ${COVERAGE_DIR}/coverage.info
