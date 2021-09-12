@@ -76,6 +76,24 @@ StruktsBSTree* strukts_bstree_new();
  */
 bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value);
 
+/**
+ * Searches for a node with a given key within the binary search tree.
+ *
+ * @param tree is the BSTree to search for the keye
+ * @param key is the key to search for in the BSTree
+ *
+ * @return a pointer to the node that contains the key if the key was found in the tree;
+ * otherwise, returns NULL.
+ */
+StruktsBSTNode* strukts_bstree_get(StruktsBSTree* tree, int key);
+
+/**
+ * Deallocates all memory used by the binary search tree and its nodes.
+ *
+ * @return true if the deallocation was successfull; false, otherwise.
+ */
+void strukts_bstree_free(StruktsBSTree* tree);
+
 #ifdef __cplusplus
 }
 #endif
