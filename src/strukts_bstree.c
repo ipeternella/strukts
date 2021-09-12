@@ -11,10 +11,15 @@
 #endif
 
 /********************** MACROS **********************/
-#define IS_LEXICO_LESS(s1, s2) (strcmp(s1, s2) < 0 ? true : false) /* lexicographically less */
+#define max(a, b)               \
+    ({                          \
+        __typeof__(a) _a = (a); \
+        __typeof__(b) _b = (b); \
+        _a > _b ? _a : _b;      \
+    })
 
 /********************** PRIVATE FUNCTIONS **********************/
-static StruktsBSTNode* strukts_bstnode_new(int key, char* value)
+static StruktsBSTNode* strukts_bstree_node_new(int key, char* value)
 {
     StruktsBSTNode* node = (StruktsBSTNode*)malloc(sizeof(StruktsBSTNode));
 
@@ -33,7 +38,7 @@ static StruktsBSTNode* strukts_bstnode_new(int key, char* value)
     return node;
 }
 
-static void strukts_bstnode_free(StruktsBSTNode* node)
+static void strukts_bstree_node_free(StruktsBSTNode* node)
 {
     /* trivial case */
     if (node == NULL)
@@ -43,9 +48,41 @@ static void strukts_bstnode_free(StruktsBSTNode* node)
     StruktsBSTNode* right = node->right;
 
     /* walks the tree deallocating nodes */
-    strukts_bstnode_free(node->left);
+    strukts_bstree_node_free(node->left);
     free(node);
-    strukts_bstnode_free(right);
+    strukts_bstree_node_free(right);
+}
+
+/**
+ * Replaces an old node with a new one and ajusts the new node's parent to point
+ * to the old target's parent and make the old target's parent point (left or right)
+ * to this new node. This operation is also known as a 'transplant'.
+ *
+ * Notice: this method does NOT free the memory of the old_node or adjusts the new
+ * node's left and right subtrees. These tasks are responsibilities of the caller.
+ */
+static void strukts_bstree_node_replace(StruktsBSTree* tree, StruktsBSTNode* old_node,
+                                        StruktsBSTNode* new_node)
+{
+    /*
+     * Step 1: make the parent point to the new node.
+     *
+     * Checks if the old_node is the root of the tree or if it's the
+     * left or right child of its parent.
+     */
+    if (old_node->parent == NULL)
+        /* old_node was the root */
+        tree->root = new_node;
+    else if (old_node->parent->right == old_node)
+        /* old_node was a right child */
+        old_node->parent->right = new_node;
+    else
+        /* old_node was a left child */
+        old_node->parent->left = new_node;
+
+    /* Step 2: make the new_node refer back to its new parent */
+    if (new_node != NULL)
+        new_node->parent = old_node->parent;
 }
 
 /********************** PUBLIC FUNCTIONS **********************/
@@ -69,14 +106,13 @@ StruktsBSTree* strukts_bstree_new()
 
     tree->root = NULL;
     tree->size = 0;
-    tree->height = 0;
 
     return tree;
 }
 
 bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value)
 {
-    StruktsBSTNode* new_node = strukts_bstnode_new(key, value);
+    StruktsBSTNode* new_node = strukts_bstree_node_new(key, value);
 
     /* allocation error */
     if (new_node == NULL)
@@ -84,7 +120,6 @@ bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value)
 
     StruktsBSTNode* current_node = tree->root;
     StruktsBSTNode* parent = NULL;
-    size_t height = 0;
 
     /* walks the tree to find the parent position */
     while (current_node != NULL) {
@@ -94,8 +129,6 @@ bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value)
             current_node = current_node->left;
         else
             current_node = current_node->right;
-
-        height++;
     }
 
     /* update new node references */
@@ -111,7 +144,6 @@ bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value)
 
     /* final tree metadata updating */
     tree->size++;
-    tree->height = height;
 
     return true;
 }
@@ -155,9 +187,17 @@ StruktsBSTNode* strukts_bstree_get(StruktsBSTree* tree, int key)
     return NULL;
 }
 
+int strukts_bstree_height(StruktsBSTNode* root)
+{
+    if (root == NULL)
+        return -1;
+
+    return max(strukts_bstree_height(root->left), strukts_bstree_height(root->right)) + 1;
+}
+
 void strukts_bstree_free(StruktsBSTree* tree)
 {
-    strukts_bstnode_free(tree->root);
+    strukts_bstree_node_free(tree->root);
 
     free(tree);
 }

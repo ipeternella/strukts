@@ -45,8 +45,7 @@ struct _StruktsBSTree {
     StruktsBSTNode* root;
 
     /* metadata */
-    size_t size; /* amount of nodes */
-    size_t height;
+    size_t size; /* amount of nodes != height */
 };
 
 /**
@@ -64,6 +63,21 @@ void strukts_bstree_walk_inorder(StruktsBSTNode* root);
  * @return a pointer to an empty binary search tree.
  */
 StruktsBSTree* strukts_bstree_new();
+
+/**
+ * Computes the height of the given binary search tree. The notion of 'height' used here
+ * is the based on edges count (connection between two nodes) and not on nodes count. Possible
+ * scenarios:
+ *
+ * - if the tree contains a NULL root, the height is -1;
+ * - if the tree contains a single node (just the root), the height is 0;
+ * - if the tree contains more than one node (root + others), the height is > 0.
+ *
+ * @param root_node is the root of the tree to start computing the height.
+ *
+ * @return the size of the tree based on edge counting (not node counting).
+ */
+int strukts_bstree_height(StruktsBSTNode* root);
 
 /**
  * Inserts a new node into a binary search tree.
@@ -86,6 +100,14 @@ bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value);
  * otherwise, returns NULL.
  */
 StruktsBSTNode* strukts_bstree_get(StruktsBSTree* tree, int key);
+
+/**
+ * Deletes a node with a given key from the tree.
+ *
+ * @param tree is the tree to delete the node from.
+ * @param key is the key of the node to be deleted from the tree.
+ */
+void strukts_bstree_delete(StruktsBSTree* tree, int key);
 
 /**
  * Returns the min value found in a binary search tree.

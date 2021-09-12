@@ -13,9 +13,9 @@ namespace
         StruktsBSTree* tree = strukts_bstree_new();
 
         /* assert */
-        EXPECT_EQ(tree->height, 0);
         EXPECT_EQ(tree->size, 0);
         EXPECT_EQ(tree->root, nullptr);
+        EXPECT_EQ(strukts_bstree_height(tree->root), -1); /* tree without nodes (no root node) */
 
         strukts_bstree_free(tree);
     }
@@ -33,11 +33,11 @@ namespace
 
         /* assert */;
         EXPECT_EQ(tree->size, 4);
-        EXPECT_EQ(tree->height, 2);
         EXPECT_EQ(tree->root->key, 12);
         EXPECT_EQ(tree->root->left->key, 5);
         EXPECT_EQ(tree->root->right->key, 18);
         EXPECT_EQ(tree->root->right->left->key, 15);
+        EXPECT_EQ(strukts_bstree_height(tree->root), 2);
 
         strukts_bstree_free(tree);
     }
@@ -63,6 +63,7 @@ namespace
         /* assert - adjacent node's children */
         EXPECT_EQ(node->left->key, 15);
         EXPECT_TRUE(node->right == nullptr);
+        EXPECT_EQ(strukts_bstree_height(tree->root), 2);
 
         strukts_bstree_free(tree);
     }
@@ -88,11 +89,13 @@ namespace
 
         /* assert - metadata */
         EXPECT_EQ(tree->size, 9);
-        EXPECT_EQ(tree->height, 4);
 
         /* assert - min and max */
         EXPECT_EQ(min_node->key, 2);
         EXPECT_EQ(max_node->key, 18);
+
+        /* assert - tree height */
+        EXPECT_EQ(strukts_bstree_height(tree->root), 4);
 
         strukts_bstree_free(tree);
     }
