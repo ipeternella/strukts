@@ -116,6 +116,28 @@ bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value)
     return true;
 }
 
+StruktsBSTNode* strukts_bstree_min(StruktsBSTree* tree)
+{
+    StruktsBSTNode* current_node = tree->root;
+
+    while (current_node->left != NULL) {
+        current_node = current_node->left;
+    }
+
+    return current_node;
+}
+
+StruktsBSTNode* strukts_bstree_max(StruktsBSTree* tree)
+{
+    StruktsBSTNode* current_node = tree->root;
+
+    while (current_node->right != NULL) {
+        current_node = current_node->right;
+    }
+
+    return current_node;
+}
+
 StruktsBSTNode* strukts_bstree_get(StruktsBSTree* tree, int key)
 {
     StruktsBSTNode* current_node = tree->root;

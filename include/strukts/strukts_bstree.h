@@ -45,7 +45,7 @@ struct _StruktsBSTree {
     StruktsBSTNode* root;
 
     /* metadata */
-    size_t size;
+    size_t size; /* amount of nodes */
     size_t height;
 };
 
@@ -86,6 +86,26 @@ bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value);
  * otherwise, returns NULL.
  */
 StruktsBSTNode* strukts_bstree_get(StruktsBSTree* tree, int key);
+
+/**
+ * Returns the min value found in a binary search tree.
+ *
+ * @param tree a binary search tree to look for its min value.
+ *
+ * @return pointer to the node with the min value of the tree. If the tree is empty,
+ * returns NULL.
+ */
+StruktsBSTNode* strukts_bstree_min(StruktsBSTree* tree);
+
+/**
+ * Returns the max value found in a binary search tree.
+ *
+ * @param tree a binary search tree to look for its max value.
+ *
+ * @return pointer to the node with the max value of the tree. If the tree is empty,
+ * returns NULL.
+ */
+StruktsBSTNode* strukts_bstree_max(StruktsBSTree* tree);
 
 /**
  * Deallocates all memory used by the binary search tree and its nodes.
