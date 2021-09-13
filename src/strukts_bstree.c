@@ -56,7 +56,8 @@ static void strukts_bstree_node_free(StruktsBSTNode* node)
 /**
  * Replaces an old node with a new one and ajusts the new node's parent to point
  * to the old target's parent and make the old target's parent point (left or right)
- * to this new node. This operation is also known as a 'transplant'.
+ * to this new node. This operation is also known as a 'transplant'. Also, new_node
+ * can be NULL.
  *
  * Notice: this method does NOT free the memory of the old_node or adjusts the new
  * node's left and right subtrees. These tasks are responsibilities of the caller.
@@ -148,9 +149,70 @@ bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value)
     return true;
 }
 
-StruktsBSTNode* strukts_bstree_min(StruktsBSTree* tree)
+bool strukts_bstree_delete(StruktsBSTree* tree, int key)
 {
-    StruktsBSTNode* current_node = tree->root;
+    StruktsBSTNode* target_node = strukts_bstree_get(tree, key);
+
+    /* if key does not exist, then no deletion */
+    if (target_node == NULL)
+        return false;
+
+    if (target_node->left == NULL) {
+        /* trivial case: no left subtree, just replace with right node */
+        strukts_bstree_node_replace(tree, target_node, target_node->right);
+    } else if (target_node->right == NULL) {
+        /* trivial case: no right subtree, just replace with left node */
+        strukts_bstree_node_replace(tree, target_node, target_node->left);
+    } else {
+        /*
+         * Target node has both children, so to find its successor we can either
+         * pick the max value of its left subtree or the min value of its right
+         * subtree as these can safely replace the target node and still respect
+         * the main property of a binary search tree. Here, we pick the min node
+         * of the right subtree of the target node to be the successor. Notice that
+         * this node will never have any left child (min node). After picking this
+         * successor, we check whether it's a direct right child of the target node.
+         */
+        StruktsBSTNode* successor = strukts_bstree_min(target_node->right);
+
+        /*
+         * Here the successor is NOT the right child (we are traveling down the right subtree
+         * of the target node). Hence, in this case, and only in this case, we replace the
+         * successor with its right child in order to move the sucessor node "out of the tree".
+         * After that, this is the only case in which we must set the successor's right node
+         * to be the target node's right child as the successor is NOT the target node's immediate
+         * right child.
+         */
+        if (successor->parent != target_node) {
+            /* move the successor "out of the tree" so its free to replace the target node */
+            strukts_bstree_node_replace(tree, successor, successor->right);
+
+            /*
+             * Safe: target_node->right is not pointing to the successor. Otherwise, out of this
+             * this IF clause, we would make the successor->right point to itself as it would be
+             * the case in which: target_node->right == successor.
+             */
+            successor->right = target_node->right;
+            successor->right->parent = successor;
+        }
+
+        /* finally replace the sucessor with the target_node */
+        strukts_bstree_node_replace(tree, target_node, successor);
+
+        /* successor takes target_node's left node and ajusts its parent */
+        successor->left = target_node->left;
+        successor->left->parent = successor;
+    }
+
+    free(target_node);
+    tree->size--;
+
+    return true;
+}
+
+StruktsBSTNode* strukts_bstree_min(StruktsBSTNode* root)
+{
+    StruktsBSTNode* current_node = root;
 
     while (current_node->left != NULL) {
         current_node = current_node->left;
@@ -159,9 +221,9 @@ StruktsBSTNode* strukts_bstree_min(StruktsBSTree* tree)
     return current_node;
 }
 
-StruktsBSTNode* strukts_bstree_max(StruktsBSTree* tree)
+StruktsBSTNode* strukts_bstree_max(StruktsBSTNode* root)
 {
-    StruktsBSTNode* current_node = tree->root;
+    StruktsBSTNode* current_node = root;
 
     while (current_node->right != NULL) {
         current_node = current_node->right;

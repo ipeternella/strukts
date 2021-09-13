@@ -68,6 +68,87 @@ namespace
         strukts_bstree_free(tree);
     }
 
+    TEST(STRUKTS_BSTREE_SUITE, SHOULD_DELETE_VALUES_FROM_BINARY_SEARCH_TREE)
+    {
+        /* arrange */
+        StruktsBSTree* tree = strukts_bstree_new();
+
+        strukts_bstree_insert(tree, 12, str("12"));
+        strukts_bstree_insert(tree, 5, str("5"));
+        strukts_bstree_insert(tree, 18, str("18"));
+        strukts_bstree_insert(tree, 15, str("15"));
+        strukts_bstree_insert(tree, 19, str("19"));
+        strukts_bstree_insert(tree, 20, str("20"));
+
+        /* act */
+        bool success = strukts_bstree_delete(tree, 18);
+
+        /* assert */
+        EXPECT_TRUE(success);
+        EXPECT_EQ(tree->size, 5);
+        EXPECT_EQ(tree->root->key, 12);
+
+        EXPECT_EQ(tree->root->right->key, 19);
+        EXPECT_EQ(tree->root->left->key, 5);
+
+        EXPECT_EQ(tree->root->right->left->key, 15);
+        EXPECT_EQ(tree->root->right->right->key, 20);
+
+        strukts_bstree_free(tree);
+    }
+
+    TEST(STRUKTS_BSTREE_SUITE, SHOULD_DELETE_ROOT_NODE_FROM_BINARY_SEARCH_TREE)
+    {
+        /* arrange */
+        StruktsBSTree* tree = strukts_bstree_new();
+
+        strukts_bstree_insert(tree, 12, str("12"));
+        strukts_bstree_insert(tree, 5, str("5"));
+        strukts_bstree_insert(tree, 19, str("19"));
+        strukts_bstree_insert(tree, 15, str("15")); /* expected successor */
+        strukts_bstree_insert(tree, 20, str("20"));
+        strukts_bstree_insert(tree, 16, str("16"));
+
+        /* act */
+        bool success = strukts_bstree_delete(tree, 12); /* deletes the root */
+
+        /* assert */
+        EXPECT_TRUE(success);
+        EXPECT_EQ(tree->size, 5);
+        EXPECT_EQ(tree->root->key, 15); /* successor */
+
+        EXPECT_EQ(tree->root->right->key, 19);
+        EXPECT_EQ(tree->root->left->key, 5);
+
+        EXPECT_EQ(tree->root->right->left->key, 16);
+        EXPECT_EQ(tree->root->right->right->key, 20);
+
+        /* act */
+        success = strukts_bstree_delete(tree, 5);
+
+        /* assert */
+        EXPECT_TRUE(success);
+        EXPECT_EQ(tree->size, 4);
+        EXPECT_EQ(tree->root->key, 15);
+        EXPECT_TRUE(tree->root->left == nullptr);
+
+        /* act */
+        success = strukts_bstree_delete(tree, 20);
+
+        EXPECT_TRUE(success);
+        EXPECT_EQ(tree->size, 3);
+        EXPECT_EQ(tree->root->key, 15);
+        EXPECT_TRUE(tree->root->left == nullptr);
+
+        EXPECT_EQ(tree->root->right->key, 19);
+        EXPECT_TRUE(tree->root->left == nullptr);
+
+        EXPECT_EQ(tree->root->right->right, nullptr);
+        EXPECT_EQ(tree->root->right->left->key, 16);
+
+        strukts_bstree_free(tree);
+    }
+
     TEST(STRUKTS_BSTREE_SUITE, SHOULD_GET_MIN_AND_MAX_VALUES_IN_BINARY_SEARCH_TREE)
     {
         /* arrange */
@@ -84,8 +165,8 @@ namespace
         strukts_bstree_insert(tree, 16, str("16"));
 
         /* act */
-        StruktsBSTNode* min_node = strukts_bstree_min(tree);
-        StruktsBSTNode* max_node = strukts_bstree_max(tree);
+        StruktsBSTNode* min_node = strukts_bstree_min(tree->root);
+        StruktsBSTNode* max_node = strukts_bstree_max(tree->root);
 
         /* assert - metadata */
         EXPECT_EQ(tree->size, 9);

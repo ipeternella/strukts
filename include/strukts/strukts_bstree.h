@@ -1,5 +1,5 @@
 /**
- * @file strukts_hashing.h
+ * @file strukts_bstree.h
  *
  * @brief Module that contains binary search trees.
  *
@@ -106,8 +106,10 @@ StruktsBSTNode* strukts_bstree_get(StruktsBSTree* tree, int key);
  *
  * @param tree is the tree to delete the node from.
  * @param key is the key of the node to be deleted from the tree.
+ *
+ * @return true if the key was deleted; false it was not found in the tree.
  */
-void strukts_bstree_delete(StruktsBSTree* tree, int key);
+bool strukts_bstree_delete(StruktsBSTree* tree, int key);
 
 /**
  * Returns the min value found in a binary search tree.
@@ -117,7 +119,7 @@ void strukts_bstree_delete(StruktsBSTree* tree, int key);
  * @return pointer to the node with the min value of the tree. If the tree is empty,
  * returns NULL.
  */
-StruktsBSTNode* strukts_bstree_min(StruktsBSTree* tree);
+StruktsBSTNode* strukts_bstree_min(StruktsBSTNode* root);
 
 /**
  * Returns the max value found in a binary search tree.
@@ -127,7 +129,7 @@ StruktsBSTNode* strukts_bstree_min(StruktsBSTree* tree);
  * @return pointer to the node with the max value of the tree. If the tree is empty,
  * returns NULL.
  */
-StruktsBSTNode* strukts_bstree_max(StruktsBSTree* tree);
+StruktsBSTNode* strukts_bstree_max(StruktsBSTNode* root);
 
 /**
  * Deallocates all memory used by the binary search tree and its nodes.
