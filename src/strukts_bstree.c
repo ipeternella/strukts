@@ -66,10 +66,8 @@ static void strukts_bstree_node_replace(StruktsBSTree* tree, StruktsBSTNode* old
                                         StruktsBSTNode* new_node)
 {
     /*
-     * Step 1: make the parent point to the new node.
-     *
-     * Checks if the old_node is the root of the tree or if it's the
-     * left or right child of its parent.
+     * Step 1: make the parent point to the new node. Checks if the old_node
+     * is the root of the tree or if it's the left or right child of its parent.
      */
     if (old_node->parent == NULL)
         /* old_node was the root */
@@ -149,6 +147,19 @@ bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value)
     return true;
 }
 
+/*
+ * There are 3 cases which deletion must cover:
+ *
+ * 1. Trivial case: target node has no left subtree, just replace with right node
+ * 2. Trivial case: target node has no right subtree, just replace with left node
+ * 3. Target node has both children, so to find its successor we can either pick the
+ *    max value of its left subtree or the min value of its right subtree as these can
+ *    safely replace the target node and still respect the main property of a binary
+ *    search tree. Here, we pick the min node of the right subtree of the target node to
+ *    be the successor. Notice that this node will never have any left child (min node).
+ *    After picking this successor, we check whether it's a direct right child of the
+ *    target node.
+ */
 bool strukts_bstree_delete(StruktsBSTree* tree, int key)
 {
     StruktsBSTNode* target_node = strukts_bstree_get(tree, key);
@@ -158,52 +169,31 @@ bool strukts_bstree_delete(StruktsBSTree* tree, int key)
         return false;
 
     if (target_node->left == NULL) {
-        /* trivial case: no left subtree, just replace with right node */
         strukts_bstree_node_replace(tree, target_node, target_node->right);
     } else if (target_node->right == NULL) {
-        /* trivial case: no right subtree, just replace with left node */
         strukts_bstree_node_replace(tree, target_node, target_node->left);
     } else {
-        /*
-         * Target node has both children, so to find its successor we can either
-         * pick the max value of its left subtree or the min value of its right
-         * subtree as these can safely replace the target node and still respect
-         * the main property of a binary search tree. Here, we pick the min node
-         * of the right subtree of the target node to be the successor. Notice that
-         * this node will never have any left child (min node). After picking this
-         * successor, we check whether it's a direct right child of the target node.
-         */
+        /* successor: min of the target_node->right subtree */
         StruktsBSTNode* successor = strukts_bstree_min(target_node->right);
 
-        /*
-         * Here the successor is NOT the right child (we are traveling down the right subtree
-         * of the target node). Hence, in this case, and only in this case, we replace the
-         * successor with its right child in order to move the sucessor node "out of the tree".
-         * After that, this is the only case in which we must set the successor's right node
-         * to be the target node's right child as the successor is NOT the target node's immediate
-         * right child.
-         */
         if (successor->parent != target_node) {
-            /* move the successor "out of the tree" so its free to replace the target node */
+            /* successor has NO left node (it's a min), trivial swap to remove it from the tree */
             strukts_bstree_node_replace(tree, successor, successor->right);
 
-            /*
-             * Safe: target_node->right is not pointing to the successor. Otherwise, out of this
-             * this IF clause, we would make the successor->right point to itself as it would be
-             * the case in which: target_node->right == successor.
-             */
+            /* safe: target_node->right != successor, so succesor take target_node's right node */
             successor->right = target_node->right;
             successor->right->parent = successor;
         }
 
-        /* finally replace the sucessor with the target_node */
-        strukts_bstree_node_replace(tree, target_node, successor);
-
         /* successor takes target_node's left node and ajusts its parent */
         successor->left = target_node->left;
         successor->left->parent = successor;
+
+        /* finally replace the sucessor with the target_node as left/right links are correct */
+        strukts_bstree_node_replace(tree, target_node, successor);
     }
 
+    /* frees allocated memory and metadata updating */
     free(target_node);
     tree->size--;
 
