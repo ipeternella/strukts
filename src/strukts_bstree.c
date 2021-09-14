@@ -180,7 +180,7 @@ bool strukts_bstree_delete(StruktsBSTree* tree, int key)
             /* successor has NO left node (it's a min), trivial swap to remove it from the tree */
             strukts_bstree_node_replace(tree, successor, successor->right);
 
-            /* safe: target_node->right != successor, so succesor take target_node's right node */
+            /* safe: target_node->right != successor, so successor can refer target_node->right */
             successor->right = target_node->right;
             successor->right->parent = successor;
         }
@@ -189,7 +189,7 @@ bool strukts_bstree_delete(StruktsBSTree* tree, int key)
         successor->left = target_node->left;
         successor->left->parent = successor;
 
-        /* finally replace the sucessor with the target_node as left/right links are correct */
+        /* finally replace the successor with the target_node as left/right links are correct */
         strukts_bstree_node_replace(tree, target_node, successor);
     }
 
