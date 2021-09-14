@@ -133,8 +133,6 @@ StruktsBSTNode* strukts_bstree_max(StruktsBSTNode* root);
 
 /**
  * Deallocates all memory used by the binary search tree and its nodes.
- *
- * @return true if the deallocation was successfull; false, otherwise.
  */
 void strukts_bstree_free(StruktsBSTree* tree);
 
