@@ -13,17 +13,21 @@
 #define free sf_free
 #endif
 
-static bool is_rehashing_needed(const StruktsHashmap* hashmap) {
+static bool is_rehashing_needed(const StruktsHashmap* hashmap)
+{
     /* current load factor = hashmap->size / (float)hashmap->capacity */
     return (float)hashmap->size / (float)hashmap->capacity >= STRUKTS_HASHMAP_MAX_LOAD_FACTOR;
 }
 
-static StruktsHashmap* strukts_hashmap_new_sized(size_t capacity) {
-    if (capacity == 0) return NULL; /* impossible allocation */
+static StruktsHashmap* strukts_hashmap_new_sized(size_t capacity)
+{
+    if (capacity == 0)
+        return NULL; /* impossible allocation */
 
     StruktsHashmap* hashmap = (StruktsHashmap*)malloc(sizeof(StruktsHashmap));
 
-    if (hashmap == NULL) return NULL;
+    if (hashmap == NULL)
+        return NULL;
 
     /* these variables MUST have been set in case any malloc fails so that
      * strukts_hashmap_free() works fine */
@@ -60,18 +64,21 @@ static StruktsHashmap* strukts_hashmap_new_sized(size_t capacity) {
     return hashmap;
 }
 
-static StruktsHashmap* rehash(const StruktsHashmap* old_hashmap) {
+static StruktsHashmap* rehash(const StruktsHashmap* old_hashmap)
+{
     StruktsLinkedList* list;
     StruktsLinkedListNode* current_node;
     StruktsHashmap* new_hashmap = strukts_hashmap_new_sized(2 * old_hashmap->capacity);
 
-    if (new_hashmap == NULL) return NULL; /* reallocation has failed */
+    if (new_hashmap == NULL)
+        return NULL; /* reallocation has failed */
 
     /* rehash previous keys of the bucket lists into the new_hashmap */
     for (size_t i = 0; i < old_hashmap->size; i++) {
         list = old_hashmap->buckets[i];
 
-        if (list == NULL || list->size < 1) continue; /* list must exists and not be empty */
+        if (list == NULL || list->size < 1)
+            continue; /* list must exists and not be empty */
 
         current_node = list->first_node;
 
@@ -94,12 +101,15 @@ static StruktsHashmap* rehash(const StruktsHashmap* old_hashmap) {
     return new_hashmap;
 }
 
-StruktsHashmap* strukts_hashmap_new() {
+StruktsHashmap* strukts_hashmap_new()
+{
     return strukts_hashmap_new_sized(STRUKTS_HASHMAP_INITIAL_CAPACITY);
 }
 
-void strukts_hashmap_free(StruktsHashmap* hashmap) {
-    if (hashmap == NULL) return;
+void strukts_hashmap_free(StruktsHashmap* hashmap)
+{
+    if (hashmap == NULL)
+        return;
 
     StruktsLinkedList* list;
 
@@ -109,7 +119,8 @@ void strukts_hashmap_free(StruktsHashmap* hashmap) {
         list = hashmap->buckets[i];  // grab a pointer to a linked list
 
         /* asserts this bucket's index holds a list */
-        if (list != NULL) strukts_linkedlist_free(list);
+        if (list != NULL)
+            strukts_linkedlist_free(list);
     }
 
     /* deallocate the array of bucket lists */
@@ -119,13 +130,15 @@ void strukts_hashmap_free(StruktsHashmap* hashmap) {
     free(hashmap);
 }
 
-bool strukts_hashmap_add(StruktsHashmap** hashmap_ptr, const char* key, char* value) {
+bool strukts_hashmap_add(StruktsHashmap** hashmap_ptr, const char* key, char* value)
+{
     if (is_rehashing_needed(*hashmap_ptr)) {
         /* reallocate bigger hash table and rehash all keys */
         StruktsHashmap* resized_hashmap = rehash(*hashmap_ptr);
 
         /* rehashing reallocation failed */
-        if (resized_hashmap == NULL) return false;
+        if (resized_hashmap == NULL)
+            return false;
 
         /* free old hashmap and point to the newly allocated hashmap */
         strukts_hashmap_free(*hashmap_ptr);
@@ -147,7 +160,8 @@ bool strukts_hashmap_add(StruktsHashmap** hashmap_ptr, const char* key, char* va
     bool added = strukts_linkedlist_append(list, key, value);
 
     /* in the worst case scenario, hashmap is reallocated (bigger) and new addition failed */
-    if (!added) return false;
+    if (!added)
+        return false;
 
     /* metadata updating */
     hashmap->size++;
@@ -155,7 +169,8 @@ bool strukts_hashmap_add(StruktsHashmap** hashmap_ptr, const char* key, char* va
     return true;
 }
 
-char* strukts_hashmap_get(const StruktsHashmap* hashmap, const char* key) {
+char* strukts_hashmap_get(const StruktsHashmap* hashmap, const char* key)
+{
     const uint8_t* key_bytes = (const uint8_t*)key;
     const size_t key_len = strlen(key);
     const uint32_t seed = 0;
@@ -170,7 +185,8 @@ char* strukts_hashmap_get(const StruktsHashmap* hashmap, const char* key) {
     list = hashmap->buckets[bucket_hash];
     search_result = strukts_linkedlist_find(list, key);
 
-    if (!search_result.found) return NULL;
+    if (!search_result.found)
+        return NULL;
 
     return search_result.node->value;
 }
