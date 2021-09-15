@@ -6,11 +6,13 @@
 #include <strukts_types.h>
 
 /********************** STATIC INLINE FUNCTIONS **********************/
-static inline WORD rotate_left(WORD value, BYTE amount) {
+static inline WORD rotate_left(WORD value, BYTE amount)
+{
     return value << amount | value >> (32 - amount);
 }
 
-static inline WORD mur(WORD hash, WORD block, bool final_rotate) {
+static inline WORD mur(WORD hash, WORD block, bool final_rotate)
+{
     const WORD c1 = 0xcc9e2d51;
     const WORD c2 = 0x1b873593;
     const BYTE r1 = 15;
@@ -23,7 +25,8 @@ static inline WORD mur(WORD hash, WORD block, bool final_rotate) {
     block *= c2;
     hash ^= block;
 
-    if (!final_rotate) return hash;
+    if (!final_rotate)
+        return hash;
 
     hash = rotate_left(hash, r2);
     hash = (hash * m) + n;
@@ -31,7 +34,8 @@ static inline WORD mur(WORD hash, WORD block, bool final_rotate) {
     return hash;
 }
 
-static inline WORD final_avalanche(WORD hash, size_t key_len) {
+static inline WORD final_avalanche(WORD hash, size_t key_len)
+{
     /*
      * Final avalanche to guarantee that if a single bit of the key is changed,
      * then at least 50% of the final hash value is also changed.
@@ -46,22 +50,27 @@ static inline WORD final_avalanche(WORD hash, size_t key_len) {
     return hash;
 }
 
-static inline WORD build_final_block(const BYTE* key, BYTE remaining_bytes) {
+static inline WORD build_final_block(const BYTE* key, BYTE remaining_bytes)
+{
     WORD final_block = 0;
 
     /*
      * Builds the final 32-bit block with possible remaining key bits. Notice that
      * if key_len is a multiple of 4, then the final block is composed only of 0 bits.
      */
-    if (remaining_bytes == 3) memcpy(&final_block, key, 3 * sizeof(BYTE));
-    if (remaining_bytes == 2) memcpy(&final_block, key, 2 * sizeof(BYTE));
-    if (remaining_bytes == 1) memcpy(&final_block, key, 1 * sizeof(BYTE));
+    if (remaining_bytes == 3)
+        memcpy(&final_block, key, 3 * sizeof(BYTE));
+    if (remaining_bytes == 2)
+        memcpy(&final_block, key, 2 * sizeof(BYTE));
+    if (remaining_bytes == 1)
+        memcpy(&final_block, key, 1 * sizeof(BYTE));
 
     return final_block;
 }
 
 /********************** PUBLIC FUNCTIONS **********************/
-WORD strukts_murmur3_hash(const BYTE* key, size_t key_len, WORD seed) {
+WORD strukts_murmur3_hash(const BYTE* key, size_t key_len, WORD seed)
+{
     WORD hash = seed;
     WORD block = 0;
 

@@ -38,11 +38,14 @@ typedef struct {
 } StruktsCtxSHA256;
 
 /********************** STATIC INLINE FUNCTIONS **********************/
-static inline void sha256_fill_block(BYTE block[], short int block_position) {
-    for (short int i = block_position; i < 64; i++) block[i] = 0;
+static inline void sha256_fill_block(BYTE block[], short int block_position)
+{
+    for (short int i = block_position; i < 64; i++)
+        block[i] = 0;
 }
 
-static inline void sha256_schedule_block(const BYTE block[], WORD schedule[]) {
+static inline void sha256_schedule_block(const BYTE block[], WORD schedule[])
+{
     short int i;
     short int j;
 
@@ -53,16 +56,19 @@ static inline void sha256_schedule_block(const BYTE block[], WORD schedule[]) {
     }
 }
 
-static inline void sha256_move_word(WORD word, BYTE hash[], short int start) {
+static inline void sha256_move_word(WORD word, BYTE hash[], short int start)
+{
     short int j = 0;
     short int i = 0;
 
-    for (i = start, j = 24; j >= 0; i++, j -= 8) hash[i] = word >> j;
+    for (i = start, j = 24; j >= 0; i++, j -= 8)
+        hash[i] = word >> j;
 }
 
 /********************** STATIC FUNCTIONS **********************/
 static void sha256_add_block_padding(BYTE block[], short int block_position, size_t msg_len,
-                                     bool append_bit) {
+                                     bool append_bit)
+{
     uint64_t len = msg_len;
     short int shift = 56;
 
@@ -79,7 +85,8 @@ static void sha256_add_block_padding(BYTE block[], short int block_position, siz
     }
 }
 
-static void sha256_process_block(StruktsCtxSHA256* ctx, const BYTE block[]) {
+static void sha256_process_block(StruktsCtxSHA256* ctx, const BYTE block[])
+{
     WORD a, b, c, d, e, f, g, h, tmp1, tmp2;
     WORD schedule[64] = {0};
 
@@ -127,7 +134,8 @@ static void sha256_process_block(StruktsCtxSHA256* ctx, const BYTE block[]) {
     ctx->h7 += h;
 }
 
-static BYTE* sha256_build_digest(const StruktsCtxSHA256* sha256_ctx) {
+static BYTE* sha256_build_digest(const StruktsCtxSHA256* sha256_ctx)
+{
     BYTE* hash = (BYTE*)calloc(32, sizeof(BYTE)); /* 256 bits digest */
 
     sha256_move_word(sha256_ctx->h0, hash, 0);
@@ -143,7 +151,8 @@ static BYTE* sha256_build_digest(const StruktsCtxSHA256* sha256_ctx) {
 }
 
 /********************** PUBLIC FUNCTIONS **********************/
-BYTE* strukts_crypto_sha256(const BYTE msg[], size_t msg_len) {
+BYTE* strukts_crypto_sha256(const BYTE msg[], size_t msg_len)
+{
     /* initial struct state with SHA-256's nothing-up-my-sleeve constants */
     StruktsCtxSHA256 sha256_ctx = {.h0 = 0x6a09e667,
                                    .h1 = 0xbb67ae85,

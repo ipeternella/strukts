@@ -11,10 +11,12 @@
 #define free sf_free
 #endif
 
-StruktsLinkedList* strukts_linkedlist_new() {
+StruktsLinkedList* strukts_linkedlist_new()
+{
     StruktsLinkedList* list = (StruktsLinkedList*)malloc(sizeof(StruktsLinkedList));
 
-    if (list == NULL) return NULL;
+    if (list == NULL)
+        return NULL;
 
     /* initial state */
     list->size = 0;
@@ -24,10 +26,12 @@ StruktsLinkedList* strukts_linkedlist_new() {
     return list;
 }
 
-static StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, char* value) {
+static StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, char* value)
+{
     StruktsLinkedListNode* new_node = (StruktsLinkedListNode*)malloc(sizeof(StruktsLinkedListNode));
 
-    if (new_node == NULL) return NULL;
+    if (new_node == NULL)
+        return NULL;
 
     /* initialize new node */
     new_node->next = NULL;
@@ -38,10 +42,12 @@ static StruktsLinkedListNode* strukts_linkedlistnode_new(const char* key, char* 
     return new_node;
 }
 
-bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, char* value) {
+bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, char* value)
+{
     StruktsLinkedListNode* new_node = strukts_linkedlistnode_new(key, value);
 
-    if (new_node == NULL) return false;
+    if (new_node == NULL)
+        return false;
 
     if (list->size == 0) {
         list->first_node = new_node;
@@ -56,10 +62,12 @@ bool strukts_linkedlist_prepend(StruktsLinkedList* list, const char* key, char* 
     return true;
 }
 
-bool strukts_linkedlist_append(StruktsLinkedList* list, const char* key, char* value) {
+bool strukts_linkedlist_append(StruktsLinkedList* list, const char* key, char* value)
+{
     StruktsLinkedListNode* new_node = strukts_linkedlistnode_new(key, value);
 
-    if (new_node == NULL) return false;
+    if (new_node == NULL)
+        return false;
 
     if (list->size == 0) {
         list->first_node = new_node;
@@ -77,8 +85,10 @@ bool strukts_linkedlist_append(StruktsLinkedList* list, const char* key, char* v
     return true;
 }
 
-bool strukts_linkedlist_remove_first(StruktsLinkedList* list) {
-    if (list->size == 0) return false;
+bool strukts_linkedlist_remove_first(StruktsLinkedList* list)
+{
+    if (list->size == 0)
+        return false;
 
     if (list->size == 1) {
         free(list->first_node);
@@ -103,8 +113,10 @@ bool strukts_linkedlist_remove_first(StruktsLinkedList* list) {
     return true;
 }
 
-bool strukts_linkedlist_remove_last(StruktsLinkedList* list) {
-    if (list->size == 0) return false;
+bool strukts_linkedlist_remove_last(StruktsLinkedList* list)
+{
+    if (list->size == 0)
+        return false;
 
     if (list->size == 1) {
         free(list->first_node);
@@ -129,12 +141,16 @@ bool strukts_linkedlist_remove_last(StruktsLinkedList* list) {
     return true;
 }
 
-bool strukts_linkedlist_remove(StruktsLinkedList* list, const char* key) {
+bool strukts_linkedlist_remove(StruktsLinkedList* list, const char* key)
+{
     StruktsLinearSearchResult search_result = strukts_linkedlist_find(list, key);
 
-    if (!search_result.found) return false;
-    if (search_result.position == 0) return strukts_linkedlist_remove_first(list);
-    if (search_result.position == list->size - 1) return strukts_linkedlist_remove_last(list);
+    if (!search_result.found)
+        return false;
+    if (search_result.position == 0)
+        return strukts_linkedlist_remove_first(list);
+    if (search_result.position == list->size - 1)
+        return strukts_linkedlist_remove_last(list);
 
     /* guaranteed to be in the middle of the list */
     StruktsLinkedListNode* current_node = search_result.node;
@@ -149,7 +165,8 @@ bool strukts_linkedlist_remove(StruktsLinkedList* list, const char* key) {
     return true;
 }
 
-StruktsLinearSearchResult strukts_linkedlist_find(StruktsLinkedList* list, const char* key) {
+StruktsLinearSearchResult strukts_linkedlist_find(StruktsLinkedList* list, const char* key)
+{
     StruktsLinkedListNode* current_node = list->first_node;
     StruktsLinearSearchResult result = {.found = false, .position = 0, .node = NULL};
     size_t position = 0;
@@ -170,7 +187,8 @@ StruktsLinearSearchResult strukts_linkedlist_find(StruktsLinkedList* list, const
     return result;
 }
 
-void strukts_linkedlist_free(StruktsLinkedList* list) {
+void strukts_linkedlist_free(StruktsLinkedList* list)
+{
     StruktsLinkedListNode* current_node = list->first_node;
 
     while (current_node != NULL) {
