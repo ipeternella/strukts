@@ -36,8 +36,7 @@ struct _StruktsBSTNode {
 };
 
 /*
- * Represents a binary search tree structure which holds a reference to the root of the tree
- * along some useful metadata such as the current tree's height, size, etc.
+ * Represents a binary search tree structure which holds a reference to the root of the tree.
  */
 typedef struct _StruktsBSTree StruktsBSTree;
 
