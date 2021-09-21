@@ -21,7 +21,6 @@ static inline StruktsRBTNode* strukts_rbtree_nil_node_new()
     return nil_node;
 }
 
-/********************** PUBLIC FUNCTIONS **********************/
 static void strukts_rbtree_left_rotate(StruktsRBTree* tree, StruktsRBTNode* node)
 {
     StruktsRBTNode* pivot_node = node->right; /* the node in which the rotation will occur around */
@@ -38,6 +37,8 @@ static void strukts_rbtree_left_rotate(StruktsRBTree* tree, StruktsRBTNode* node
     }
 
     /* adjust the parent of the pivot node */
+    pivot_node->parent = node->parent;
+
     if (node->parent == tree->nil_node)
         tree->root = pivot_node;
     else if (node == node->parent.left)
@@ -52,8 +53,34 @@ static void strukts_rbtree_left_rotate(StruktsRBTree* tree, StruktsRBTNode* node
 
 static void strukts_rbtree_right_rotate(StruktsRBTree* tree, StruktsRBTNode* node)
 {
+    StruktsRBTNode* pivot_node = node->left; /* the node in which the rotation will occur around */
+
+    /* cannot left rotate the node around a nil node */
+    if (pivot_node == tree->nil_node)
+        return;
+
+    /* adjusts left subtree of the node */
+    node->left = pivot_node->right;
+
+    if (pivot_node->right != tree->nil_node)
+        pivot_node->right->parent = node;
+
+    /* adjust the parent of the pivot node */
+    pivot_node->parent = node->parent;
+
+    if (node->parent == tree->nil_node)
+        tree->root = pivot_node;
+    else if (node == node->parent->left)
+        node->parent->left = pivot_node;
+    else
+        node->parent->right = pivot_node;
+
+    /* adjust the node to become a child of the pivot node to complete the right rotation */
+    pivot_node->right = node;
+    node->parent = pivot_node;
 }
 
+/********************** PUBLIC FUNCTIONS **********************/
 StruktsRBTNode* strukts_rbtree_new()
 {
     StruktsRBTree* tree = (StruktsRBTree*)malloc(sizeof(StruktsRBTree));
