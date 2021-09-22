@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 /********************** PRIVATE FUNCTIONS **********************/
-static inline StruktsRBTNode* strukts_rbtree_nil_node_new()
+static inline StruktsRBTNode* rbtree_nil_node_new()
 {
     StruktsRBTNode* nil_node = (StruktsRBTNode*)malloc(sizeof(StruktsRBTNode));
 
@@ -21,7 +21,17 @@ static inline StruktsRBTNode* strukts_rbtree_nil_node_new()
     return nil_node;
 }
 
-static void strukts_rbtree_left_rotate(StruktsRBTree* tree, StruktsRBTNode* node)
+static inline bool is_left_child(StruktsRBTNode* node)
+{
+    return node == node->parent->left;
+}
+
+static inline bool is_right_child(StruktsRBTNode* node)
+{
+    return node == node->parent->right;
+}
+
+static void rbtree_left_rotate(StruktsRBTree* tree, StruktsRBTNode* node)
 {
     StruktsRBTNode* pivot_node = node->right; /* the node in which the rotation will occur around */
 
@@ -51,7 +61,7 @@ static void strukts_rbtree_left_rotate(StruktsRBTree* tree, StruktsRBTNode* node
     node->parent = pivot_node;
 }
 
-static void strukts_rbtree_right_rotate(StruktsRBTree* tree, StruktsRBTNode* node)
+static void rbtree_right_rotate(StruktsRBTree* tree, StruktsRBTNode* node)
 {
     StruktsRBTNode* pivot_node = node->left; /* the node in which the rotation will occur around */
 
@@ -80,6 +90,77 @@ static void strukts_rbtree_right_rotate(StruktsRBTree* tree, StruktsRBTNode* nod
     node->parent = pivot_node;
 }
 
+static void strukts_rbtree_insert_fix(StruktsRBTree* tree, StruktsRBTNode* node)
+{
+    StruktsRBTNode* right_uncle;
+    StruktsRBTNode* left_uncle;
+    StruktsRBTNode* grand_parent;
+    StruktsRBTNode* parent;
+
+    /*
+     * New nodes are red so while its parent is also red we violate the r.b.tree
+     * property which says that a red parent must have two black children.
+     */
+    while (node->parent->color == Red) {
+        /* new node's parent is a left child */
+        if (is_left_child(node->parent)) {
+            right_uncle = node->parent->parent->right;
+            grand_parent = node->parent->parent;
+            parent = node->parent;
+
+            /* right uncle is red */
+            if (right_uncle->color == Red) {
+                /* fixes tree up to its grande parent */
+                parent->color = Black;
+                right_uncle->color = Black;
+                grand_parent->color = Red;
+
+                /* fixes the tree up to the node's grandparent and then loop again */
+                node = grand_parent;
+            }
+            /* right uncle is black */
+            else {
+                /* if the uncle is black, for final right rotate, the node must be a LEFT child */
+                if (is_right_child(node)) {
+                    node = parent;
+                    rbtree_left_rotate(tree, node); /* makes the node become a left child */
+                }
+                parent->color = Black; /* parent becomes black, which finishes the loop */
+                grand_parent->color = Red;
+                rbtree_right_rotate(tree, grand_parent); /* black parent goes one level up */
+            }
+        } else {
+            /* mirrors the algorithm above: new node's parent is a right child */
+            left_uncle = node->parent->parent->left;
+            grand_parent = node->parent->parent;
+            parent = node->parent;
+
+            if (left_uncle->color == Red) {
+                parent->color = Black;
+                left_uncle->color = Black;
+                grand_parent->color = Red;
+
+                /* fixes the tree up to the node's grandparent and then loop again */
+                node = grand_parent;
+            }
+            /* left uncle is black */
+            else {
+                /* if the uncle is black, for final left rotate, the node must be a RIGHT child */
+                if (is_left_child(node)) {
+                    node = parent;
+                    rbtree_right_rotate(tree, node); /* makes the node become a right child */
+                }
+                parent->color = Black; /* parent becomes black, which finishes the loop */
+                grand_parent->color = Red;
+                rbtree_left_rotate(tree, grand_parent); /* black parent goes one level up */
+            }
+        }
+    }
+
+    /* the root and nil nodes (tree->nil) must be black in a r.b.tree */
+    tree->root->color = Black;
+}
+
 /********************** PUBLIC FUNCTIONS **********************/
 StruktsRBTNode* strukts_rbtree_new()
 {
@@ -88,7 +169,7 @@ StruktsRBTNode* strukts_rbtree_new()
     if (tree == NULL)
         return NULL;
 
-    StruktsRBTNode* nil_node = strukts_rbtree_nil_node_new();
+    StruktsRBTNode* nil_node = rbtree_nil_node_new();
 
     if (nil_node == NULL) {
         free(tree);
