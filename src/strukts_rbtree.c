@@ -117,11 +117,6 @@ static void rbtree_right_rotate(StruktsRBTree* tree, StruktsRBTNode* node)
 
 static void rbtree_insert_fix(StruktsRBTree* tree, StruktsRBTNode* node)
 {
-    StruktsRBTNode* right_uncle;
-    StruktsRBTNode* left_uncle;
-    StruktsRBTNode* grand_parent;
-    StruktsRBTNode* parent;
-
     /*
      * New nodes are red so while its parent is also red we violate the r.b.tree
      * property which says that a red parent must have two black children.
@@ -129,55 +124,52 @@ static void rbtree_insert_fix(StruktsRBTree* tree, StruktsRBTNode* node)
     while (node->parent->color == Red) {
         /* new node's parent is a left child */
         if (is_left_child(node->parent)) {
-            right_uncle = node->parent->parent->right;
-            grand_parent = node->parent->parent;
-            parent = node->parent;
-
             /* right uncle is red */
-            if (right_uncle->color == Red) {
-                /* fixes tree up to its grande parent */
-                parent->color = Black;
-                right_uncle->color = Black;
-                grand_parent->color = Red;
+            if (node->parent->parent->right->color == Red) {
+                /* fixes tree up to its grand parent */
+                node->parent->color = Black;                /* parent */
+                node->parent->parent->right->color = Black; /* right uncle */
+                node->parent->parent->color = Red;          /* grand parent */
 
-                /* fixes the tree up to the node's grandparent and then loop again */
-                node = grand_parent;
+                /* fixes the tree up to the node's grand parent and then loop again */
+                node = node->parent->parent;
             }
             /* right uncle is black */
             else {
                 /* if the uncle is black, for final right rotate, the node must be a LEFT child */
                 if (is_right_child(node)) {
-                    node = parent;
+                    /* move the node up for left rotation */
+                    node = node->parent;
                     rbtree_left_rotate(tree, node); /* makes the node become a left child */
                 }
-                parent->color = Black; /* parent becomes black, which finishes the loop */
-                grand_parent->color = Red;
-                rbtree_right_rotate(tree, grand_parent); /* black parent goes one level up */
+                node->parent->color = Black; /* parent becomes black, which finishes the loop */
+                node->parent->parent->color = Red; /* grand parent */
+                rbtree_right_rotate(tree,
+                                    node->parent->parent); /* black parent goes one level up */
             }
-        } else {
-            /* mirrors the algorithm above: new node's parent is a right child */
-            left_uncle = node->parent->parent->left;
-            grand_parent = node->parent->parent;
-            parent = node->parent;
-
-            if (left_uncle->color == Red) {
-                parent->color = Black;
-                left_uncle->color = Black;
-                grand_parent->color = Red;
+        }
+        /* mirrors the algorithm above: new node's parent is a right child */
+        else {
+            /* left uncle is red */
+            if (node->parent->parent->left->color == Red) {
+                node->parent->color = Black;
+                node->parent->parent->left->color = Black;
+                node->parent->parent->color = Red;
 
                 /* fixes the tree up to the node's grandparent and then loop again */
-                node = grand_parent;
+                node = node->parent->parent;
             }
             /* left uncle is black */
             else {
                 /* if the uncle is black, for final left rotate, the node must be a RIGHT child */
                 if (is_left_child(node)) {
-                    node = parent;
+                    /* move the node up for right rotation */
+                    node = node->parent;
                     rbtree_right_rotate(tree, node); /* makes the node become a right child */
                 }
-                parent->color = Black; /* parent becomes black, which finishes the loop */
-                grand_parent->color = Red;
-                rbtree_left_rotate(tree, grand_parent); /* black parent goes one level up */
+                node->parent->color = Black; /* parent becomes black, which finishes the loop */
+                node->parent->parent->color = Red;
+                rbtree_left_rotate(tree, node->parent->parent); /* black parent goes one level up */
             }
         }
     }
