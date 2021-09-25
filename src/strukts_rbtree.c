@@ -195,10 +195,10 @@ static void rbtree_insert_fix(StruktsRBTree* tree, StruktsRBTNode* node)
 static void rbtree_node_replace(StruktsRBTree* tree, StruktsRBTNode* old_node,
                                 StruktsRBTNode* new_node)
 {
-    if (is_tree_root(old_node)) {
+    if (is_tree_root(tree, old_node)) {
         tree->root = new_node;
     } else if (is_left_child(old_node)) {
-        old_node->parent.left = new_node;
+        old_node->parent->left = new_node;
     } else {
         old_node->parent->right = new_node;
     }
@@ -320,50 +320,63 @@ StruktsRBTNode* strukts_rbtree_get(StruktsRBTree* tree, int key)
 
 bool strukts_rbtree_delete(StruktsRBTree* tree, int key)
 {
-    /* grabs node with the key for deletion: the original target node */
-    StruktsRBTNode* original_target = strukts_rbtree_get(tree, key);
+    /* grabs node with the key for deletion: the target node */
+    StruktsRBTNode* target = strukts_rbtree_get(tree, key);
 
     /* key does not exist in the tree */
-    if (node_for_delete = tree->nil_node)
+    if (target = tree->nil_node)
         return false;
 
-    StruktsRBTNode* successor;
-    StruktsRBTNode* target = original_target; /* begins as the original target */
-    StruktsNodeColor removed_color = target->color;
+    StruktsRBTNode* successor;       /* holds a node that might succeed the target node */
+    StruktsRBTNode* node_for_repair; /* holds a possibly unbalanced node to fix later */
+    StruktsNodeColor lost_color;     /* color that the tree loses from deletion */
 
-    /* trivial cases: original target has just ONE child */
+    /* in the trivial cases, the lost color belongs to the removed target node */
+    lost_color = target->color;
+
+    /*
+     * Trivial cases: Here, the target node is removed and its color is the one
+     * removed (lost) from the tree. Here, this removed color will be used to see if the
+     * r.b.tree needs to be 'repaired' as a black color node might have been removed.
+     */
     if (target->left == tree->nil_node) {
-        successor = target->right;
-        rbtree_node_replace(tree, target, successor);
+        node_for_repair = target->right; /* node for repair is the target's successor */
+        rbtree_node_replace(tree, target, node_for_repair);
     } else if (target->right == tree->nil_node) {
-        successor = target->left;
-        rbtree_node_replace(tree, target, successor);
-    }
-    /* non-trivial case: original target has BOTH children */
-    else {
-        /* new target, removed color and successor */
-        target = strukts_rbtree_min(tree, target->right);
-        removed_color = target->color;
-        successor = target->right; /* target is min node: has no left child */
+        node_for_repair = target->left;
+        rbtree_node_replace(tree, target, node_for_repair);
+    } else {
+        /*
+         * Non-trivial case: the target node has BOTH children. In this case, the min node
+         * of the target's right subtree becomes the target's successor in the tree and will
+         * replace the target with the SAME color. As such, the r.b.tree color does not become
+         * unbalanced in terms of colors at the target's position (same color is sustained),
+         * however, as the min node is moved from its original position, this old position "loses"
+         * its color and, if that color is BLACK, it unbalances the r.b.tree's color and must be
+         * repaired in the end.
+         */
+        successor = strukts_rbtree_min(tree, target->right);
+        lost_color = successor->color;      /* successor assumes target's color and loses its own */
+        node_for_repair = successor->right; /* target is min node: has no left child */
 
-        if (target->parent == original_target) {
-            successor->parent = target; /* tree->nil may point to target */
+        if (successor->parent == target) {
+            node_for_repair->parent = successor; /* tree->nil may point to target */
         } else {
-            rbtree_node_replace(tree, target, successor);
-            target->right = original_target->right;
-            target->right->parent = target;
+            rbtree_node_replace(tree, successor, node_for_repair); /* frees successor from tree */
+            successor->right = target->right;
+            successor->right->parent = target;
         }
 
-        /* finally replace target with the original target with the SAME original color */
-        rbtree_node_replace(tree, original_target, target);
-        target->left = original_target->left;
-        target->left->parent = target;
-        target->color = original_target->color; /* !: same orginal color :! */
+        /* finally replace the target with its successor with the same color */
+        rbtree_node_replace(tree, target, successor);
+        successor->left = target->left;
+        successor->left->parent = target;
+        successor->color = target->color; /* same color so tree loses successor's color */
     }
 
-    if (removed_color == Black) {
-        /* fix the r.b.tree as a black node was removed */
-    }
+    /* if the lost color was black, the r.b.tree must be fixed starting from the repair node */
+    if (lost_color == Black)
+        rbtree_delete_fix(tree, node_for_repair);
 
     return true;
 }
