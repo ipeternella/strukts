@@ -82,6 +82,16 @@ bool strukts_rbtree_insert(StruktsRBTree* tree, int key, char* value);
  */
 int strukts_rbtree_height(StruktsRBTree* tree, StruktsRBTNode* root);
 
+/**
+ * Deletes a given key from the red black tree (if it exists).
+ *
+ * @param tree is the r.b.tree to delete the node from.
+ * @param key is the key of the node to be deleted from the r.b.tree.
+ *
+ * @return true if the key was deleted; false if it was not found in the tree.
+ */
+bool strukts_rbtree_delete(StruktsRBTree* tree, int key);
+
 #ifdef __cplusplus
 }
 #endif

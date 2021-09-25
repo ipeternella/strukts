@@ -56,6 +56,11 @@ static inline bool is_right_child(StruktsRBTNode* node)
     return node == node->parent->right;
 }
 
+static inline bool is_tree_root(StruktsRBTree* tree, StruktsRBTNode* node)
+{
+    return node == tree->root;
+}
+
 static void rbtree_left_rotate(StruktsRBTree* tree, StruktsRBTNode* node)
 {
     StruktsRBTNode* pivot_node = node->right; /* the node in which the rotation will occur around */
@@ -178,6 +183,34 @@ static void rbtree_insert_fix(StruktsRBTree* tree, StruktsRBTNode* node)
     tree->root->color = Black;
 }
 
+/**
+ * Replaces an old node with a new one and ajusts the new node's parent to point
+ * to the old target's parent and make the old target's parent point (left or right)
+ * to this new node. This operation is also known as a 'transplant'. Also, new_node
+ * can be tree->nil.
+ *
+ * Notice: this method does NOT free the memory of the old_node or adjusts the new
+ * node's left and right subtrees. These tasks are responsibilities of the caller.
+ */
+static void rbtree_node_replace(StruktsRBTree* tree, StruktsRBTNode* old_node,
+                                StruktsRBTNode* new_node)
+{
+    if (is_tree_root(old_node)) {
+        tree->root = new_node;
+    } else if (is_left_child(old_node)) {
+        old_node->parent.left = new_node;
+    } else {
+        old_node->parent->right = new_node;
+    }
+
+    /* no NULL check unlike in b.s.trees */
+    new_node->parent = old_node->parent;
+}
+
+static void rbtree_delete_fix(StruktsRBTree* tree, StruktsRBTNode* node)
+{
+}
+
 /********************** PUBLIC FUNCTIONS **********************/
 StruktsRBTree* strukts_rbtree_new()
 {
@@ -201,7 +234,7 @@ StruktsRBTree* strukts_rbtree_new()
 
 int strukts_rbtree_height(StruktsRBTree* tree, StruktsRBTNode* root)
 {
-    if (root == NULL || root == NULL || root == tree->nil_node)
+    if (tree == NULL || root == NULL || root == tree->nil_node)
         return -1;
 
     return max(strukts_rbtree_height(tree, root->left), strukts_rbtree_height(tree, root->right)) +
@@ -242,6 +275,95 @@ bool strukts_rbtree_insert(StruktsRBTree* tree, int key, char* value)
 
     /* as we might have a red child whose parent is also red, we need to fix the r.b.tree */
     rbtree_insert_fix(tree, new_node);
+
+    return true;
+}
+
+StruktsRBTNode* strukts_rbtree_min(StruktsRBTree* tree, StruktsRBTNode* root)
+{
+    StruktsRBTNode* current_node = root;
+
+    while (current_node->left != tree->nil_node) {
+        current_node = current_node->left;
+    }
+
+    return current_node;
+}
+
+StruktsRBTNode* strukts_rbtree_max(StruktsRBTree* tree, StruktsRBTNode* root)
+{
+    StruktsRBTNode* current_node = root;
+
+    while (current_node->right != tree->nil_node) {
+        current_node = current_node->right;
+    }
+
+    return current_node;
+}
+
+StruktsRBTNode* strukts_rbtree_get(StruktsRBTree* tree, int key)
+{
+    StruktsRBTNode* current_node = tree->root;
+
+    /* search for the key within the r.b.tree like in a b.s.tree */
+    while (current_node != tree->nil_node) {
+        if (key == current_node->key) /* found it */
+            return current_node;
+        else if (key > current_node->key)
+            current_node = current_node->right;
+        else
+            current_node = current_node->left;
+    }
+
+    return current_node; /* might return tree->nil */
+}
+
+bool strukts_rbtree_delete(StruktsRBTree* tree, int key)
+{
+    /* grabs node with the key for deletion: the original target node */
+    StruktsRBTNode* original_target = strukts_rbtree_get(tree, key);
+
+    /* key does not exist in the tree */
+    if (node_for_delete = tree->nil_node)
+        return false;
+
+    StruktsRBTNode* successor;
+    StruktsRBTNode* target = original_target; /* begins as the original target */
+    StruktsNodeColor removed_color = target->color;
+
+    /* trivial cases: original target has just ONE child */
+    if (target->left == tree->nil_node) {
+        successor = target->right;
+        rbtree_node_replace(tree, target, successor);
+    } else if (target->right == tree->nil_node) {
+        successor = target->left;
+        rbtree_node_replace(tree, target, successor);
+    }
+    /* non-trivial case: original target has BOTH children */
+    else {
+        /* new target, removed color and successor */
+        target = strukts_rbtree_min(tree, target->right);
+        removed_color = target->color;
+        successor = target->right; /* target is min node: has no left child */
+
+        if (target->parent == original_target) {
+            successor->parent = target; /* tree->nil may point to target */
+        } else {
+            rbtree_node_replace(tree, target, successor);
+            target->right = original_target->right;
+            target->right->parent = target;
+        }
+
+        /* finally replace target with the original target with the SAME original color */
+        rbtree_node_replace(tree, original_target, target);
+        target->left = original_target->left;
+        target->left->parent = target;
+        target->color = original_target->color; /* !: same orginal color :! */
+    }
+
+    if (removed_color == Black) {
+        /* fix the r.b.tree as a black node was removed */
+    }
 
     return true;
 }
