@@ -209,83 +209,83 @@ static void rbtree_node_replace(StruktsRBTree* tree, StruktsRBTNode* old_node,
 
 static void rbtree_delete_fix(StruktsRBTree* tree, StruktsRBTNode* node)
 {
-    StruktsRBTNode* right_uncle;
-    StruktsRBTNode* left_uncle;
+    StruktsRBTNode* right_sibling;
+    StruktsRBTNode* left_sibling;
 
     while (node != tree->root && node->color == Black) {
         if (is_left_child(node)) {
-            right_uncle = node->parent->right;
+            right_sibling = node->parent->right;
 
             /*
-             * Case 1: uncle is RED -> just converts into case 2. In all other
-             * cases the uncle is BLACK.
+             * Case 1: sibling is RED -> just converts into case 2. In all other
+             * cases the sibling is BLACK.
              */
-            if (right_uncle->color == Red) {
-                right_uncle->color = Black;
+            if (right_sibling->color == Red) {
+                right_sibling->color = Black;
                 node->parent->color = Red;
                 rbtree_left_rotate(tree, node->parent);
-                right_uncle = node->parent->right;
+                right_sibling = node->parent->right;
             }
 
             /*
-             * Case 2: uncle's children are both BLACK. Remove black from right uncle
+             * Case 2: sibling's children are both BLACK. Remove black from right sibling
              * ('red' it) and move the node up to its parent which, if it's a red node,
              * ends the loop and becomes a black node in the end of this function.
              */
-            if (right_uncle->left->color == Black && right_uncle->right->color == Black) {
-                right_uncle->color = Red;
+            if (right_sibling->left->color == Black && right_sibling->right->color == Black) {
+                right_sibling->color = Red;
                 node = node->parent; /* becomes black in the end, adding missing black node */
             } else {
                 /*
-                 * Case 3: uncle's left children is RED. Converts to case 4.
+                 * Case 3: sibling's left children is RED. Converts to case 4.
                  */
-                if (right_uncle->right->color == Black) {
-                    right_uncle->left->color = Black;
-                    right_uncle->color = Red;
-                    rbtree_right_rotate(tree, right_uncle);
-                    right_uncle = node->parent->right;
+                if (right_sibling->right->color == Black) {
+                    right_sibling->left->color = Black;
+                    right_sibling->color = Red;
+                    rbtree_right_rotate(tree, right_sibling);
+                    right_sibling = node->parent->right;
                 }
 
                 /*
-                 * Case 4: uncle's right children is RED. After the rotation, node's
+                 * Case 4: sibling's right children is RED. After the rotation, node's
                  * parent becomes a black node which adds the missing black node.
                  */
-                right_uncle->color = node->parent->color;
+                right_sibling->color = node->parent->color;
                 node->parent->color = Black; /* readds missing black node */
-                right_uncle->right->color = Black;
+                right_sibling->right->color = Black;
                 rbtree_left_rotate(tree, node->parent);
                 node = tree->root; /* finishes the loop */
             }
         }
         /* node is a right child: symmetric from above */
         else {
-            left_uncle = node->parent->left;
+            left_sibling = node->parent->left;
 
-            /* case 1: uncle is RED, all other cases the uncle is BLACK */
-            if (left_uncle->color == Red) {
-                left_uncle->color = Black;
+            /* case 1: sibling is RED, all other cases the sibling is BLACK */
+            if (left_sibling->color == Red) {
+                left_sibling->color = Black;
                 node->parent->color = Red;
                 rbtree_right_rotate(tree, node->parent);
-                left_uncle = node->parent->left;
+                left_sibling = node->parent->left;
             }
 
             /* case 2 */
-            if (left_uncle->right->color == Black && left_uncle->left->color == Black) {
-                left_uncle->color = Red;
+            if (left_sibling->right->color == Black && left_sibling->left->color == Black) {
+                left_sibling->color = Red;
                 node = node->parent; /* becomes black in the end, adding missing black node */
             } else {
                 /* case 3 */
-                if (left_uncle->left->color == Black) {
-                    left_uncle->right->color = Black;
-                    left_uncle->color = Red;
-                    rbtree_left_rotate(tree, left_uncle);
-                    left_uncle = node->parent->left;
+                if (left_sibling->left->color == Black) {
+                    left_sibling->right->color = Black;
+                    left_sibling->color = Red;
+                    rbtree_left_rotate(tree, left_sibling);
+                    left_sibling = node->parent->left;
                 }
 
                 /* case 4 */
-                left_uncle->color = node->parent->color;
+                left_sibling->color = node->parent->color;
                 node->parent->color = Black; /* readds missing black node */
-                left_uncle->left->color = Black;
+                left_sibling->left->color = Black;
                 rbtree_right_rotate(tree, node->parent);
                 node = tree->root; /* finishes the loop */
             }
