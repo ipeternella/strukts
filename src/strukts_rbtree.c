@@ -209,6 +209,90 @@ static void rbtree_node_replace(StruktsRBTree* tree, StruktsRBTNode* old_node,
 
 static void rbtree_delete_fix(StruktsRBTree* tree, StruktsRBTNode* node)
 {
+    StruktsRBTNode* right_uncle;
+    StruktsRBTNode* left_uncle;
+
+    while (node != tree->root && node->color == Black) {
+        if (is_left_child(node)) {
+            right_uncle = node->parent->right;
+
+            /*
+             * Case 1: uncle is RED -> just converts into case 2. In all other
+             * cases the uncle is BLACK.
+             */
+            if (right_uncle->color == Red) {
+                right_uncle->color = Black;
+                node->parent->color = Red;
+                rbtree_left_rotate(tree, node->parent);
+                right_uncle = node->parent->right;
+            }
+
+            /*
+             * Case 2: uncle's children are both BLACK. Remove black from right
+             * uncle (red it) and move the node up to its parent which, if it's a red node,
+             * it ends the loop and becomes a black node in the end of this function.
+             */
+            if (right_uncle->left->color == Black && right_uncle->right->color == Black) {
+                right_uncle->color = Red;
+                node = node->parent; /* becomes black in the end, adding missing black node */
+            } else {
+                /*
+                 * Case 3: uncle's left children is RED. Converts to case 4.
+                 */
+                if (right_uncle->color == Black) {
+                    right_uncle->left->color = Red;
+                    right_uncle->color = Red;
+                    rbtree_right_rotate(tree, right_uncle);
+                    right_uncle = node->parent->right;
+                }
+
+                /*
+                 * Case 4: uncle's right children is RED. After the rotation, node's
+                 * parent becomes a black node which adds the missing black node.
+                 */
+                right_uncle->color = node->parent->color;
+                node->parent->color = Black; /* readds missing black node */
+                right_uncle->right->color = Black;
+                rbtree_left_rotate(tree, node->parent);
+                node = tree->root; /* finishes the loop */
+            }
+        }
+        /* node is a right child: symmetric from above */
+        else {
+            left_uncle = node->parent->left;
+
+            /* case 1: uncle is RED, all other cases the uncle is BLACK */
+            if (left_uncle->color == Red) {
+                left_uncle->color = Black;
+                node->parent->color = Red;
+                rbtree_right_rotate(tree, node->parent);
+                left_uncle = node->parent->right;
+            }
+
+            /* case 2 */
+            if (left_uncle->left->color == Black && left_uncle->right->color == Black) {
+                left_uncle->color = Red;
+                node = node->parent; /* becomes black in the end, adding missing black node */
+            } else {
+                /* case 3 */
+                if (left_uncle->color == Black) {
+                    left_uncle->left->color = Red;
+                    left_uncle->color = Red;
+                    rbtree_left_rotate(tree, left_uncle);
+                    left_uncle = node->parent->left;
+                }
+
+                /* case 4 */
+                left_uncle->color = node->parent->color;
+                node->parent->color = Black; /* readds missing black node */
+                left_uncle->left->color = Black;
+                rbtree_right_rotate(tree, node->parent);
+                node = tree->root; /* finishes the loop */
+            }
+        }
+    }
+
+    node->color = Black;
 }
 
 /********************** PUBLIC FUNCTIONS **********************/
@@ -324,7 +408,7 @@ bool strukts_rbtree_delete(StruktsRBTree* tree, int key)
     StruktsRBTNode* target = strukts_rbtree_get(tree, key);
 
     /* key does not exist in the tree */
-    if (target = tree->nil_node)
+    if (target == tree->nil_node)
         return false;
 
     StruktsRBTNode* successor;       /* holds a node that might succeed the target node */
