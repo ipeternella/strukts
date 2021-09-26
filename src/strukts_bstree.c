@@ -53,7 +53,7 @@ static void strukts_bstree_node_free(StruktsBSTNode* node)
     strukts_bstree_node_free(right);
 }
 
-/**
+/*
  * Replaces an old node with a new one and ajusts the new node's parent to point
  * to the old target's parent and make the old target's parent point (left or right)
  * to this new node. This operation is also known as a 'transplant'. Also, new_node

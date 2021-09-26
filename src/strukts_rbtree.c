@@ -183,7 +183,7 @@ static void rbtree_insert_fix(StruktsRBTree* tree, StruktsRBTNode* node)
     tree->root->color = Black;
 }
 
-/**
+/*
  * Replaces an old node with a new one and ajusts the new node's parent to point
  * to the old target's parent and make the old target's parent point (left or right)
  * to this new node. This operation is also known as a 'transplant'. Also, new_node
@@ -228,9 +228,9 @@ static void rbtree_delete_fix(StruktsRBTree* tree, StruktsRBTNode* node)
             }
 
             /*
-             * Case 2: uncle's children are both BLACK. Remove black from right
-             * uncle (red it) and move the node up to its parent which, if it's a red node,
-             * it ends the loop and becomes a black node in the end of this function.
+             * Case 2: uncle's children are both BLACK. Remove black from right uncle
+             * ('red' it) and move the node up to its parent which, if it's a red node,
+             * ends the loop and becomes a black node in the end of this function.
              */
             if (right_uncle->left->color == Black && right_uncle->right->color == Black) {
                 right_uncle->color = Red;
@@ -239,8 +239,8 @@ static void rbtree_delete_fix(StruktsRBTree* tree, StruktsRBTNode* node)
                 /*
                  * Case 3: uncle's left children is RED. Converts to case 4.
                  */
-                if (right_uncle->color == Black) {
-                    right_uncle->left->color = Red;
+                if (right_uncle->right->color == Black) {
+                    right_uncle->left->color = Black;
                     right_uncle->color = Red;
                     rbtree_right_rotate(tree, right_uncle);
                     right_uncle = node->parent->right;
@@ -266,17 +266,17 @@ static void rbtree_delete_fix(StruktsRBTree* tree, StruktsRBTNode* node)
                 left_uncle->color = Black;
                 node->parent->color = Red;
                 rbtree_right_rotate(tree, node->parent);
-                left_uncle = node->parent->right;
+                left_uncle = node->parent->left;
             }
 
             /* case 2 */
-            if (left_uncle->left->color == Black && left_uncle->right->color == Black) {
+            if (left_uncle->right->color == Black && left_uncle->left->color == Black) {
                 left_uncle->color = Red;
                 node = node->parent; /* becomes black in the end, adding missing black node */
             } else {
                 /* case 3 */
-                if (left_uncle->color == Black) {
-                    left_uncle->left->color = Red;
+                if (left_uncle->left->color == Black) {
+                    left_uncle->right->color = Black;
                     left_uncle->color = Red;
                     rbtree_left_rotate(tree, left_uncle);
                     left_uncle = node->parent->left;
@@ -448,13 +448,13 @@ bool strukts_rbtree_delete(StruktsRBTree* tree, int key)
         } else {
             rbtree_node_replace(tree, successor, node_for_repair); /* frees successor from tree */
             successor->right = target->right;
-            successor->right->parent = target;
+            successor->right->parent = successor;
         }
 
         /* finally replace the target with its successor with the same color */
         rbtree_node_replace(tree, target, successor);
         successor->left = target->left;
-        successor->left->parent = target;
+        successor->left->parent = successor;
         successor->color = target->color; /* same color so tree loses successor's color */
     }
 
