@@ -3,6 +3,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#ifdef DEBUG
+#include "sfmalloc.h"
+#define malloc sf_malloc
+#define free sf_free
+#endif
+
 /********************** MACROS **********************/
 #define max(a, b)               \
     ({                          \
@@ -44,6 +50,21 @@ static inline StruktsRBTNode* rbtree_node_new(StruktsRBTree* tree, int key, char
     new_node->right = tree->nil_node;
 
     return new_node;
+}
+
+static void strukts_rbtree_node_free(StruktsRBTree* tree, StruktsRBTNode* node)
+{
+    /* trivial case */
+    if (node == tree->nil_node)
+        return;
+
+    /* store reference as parent will be freed so node->right can't be used */
+    StruktsRBTNode* right = node->right;
+
+    /* walks the tree deallocating nodes */
+    strukts_rbtree_node_free(tree, node->left);
+    free(node);
+    strukts_rbtree_node_free(tree, right);
 }
 
 static inline bool is_left_child(StruktsRBTNode* node)
@@ -462,5 +483,16 @@ bool strukts_rbtree_delete(StruktsRBTree* tree, int key)
     if (lost_color == Black)
         rbtree_delete_fix(tree, node_for_repair);
 
+    /* frees target node's memory */
+    free(target);
+
     return true;
+}
+
+void strukts_rbtree_free(StruktsRBTree* tree)
+{
+    strukts_rbtree_node_free(tree, tree->root);
+
+    free(tree->nil_node);
+    free(tree);
 }

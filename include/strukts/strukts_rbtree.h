@@ -92,6 +92,31 @@ int strukts_rbtree_height(StruktsRBTree* tree, StruktsRBTNode* root);
  */
 bool strukts_rbtree_delete(StruktsRBTree* tree, int key);
 
+/**
+ * Returns the min value found in a red black tree.
+ *
+ * @param tree is a red black tree to look for its min value.
+ *
+ * @return pointer to the node with the min value of the tree. If the tree is empty,
+ * returns r.b.tree's nil node.
+ */
+StruktsRBTNode* strukts_rbtree_min(StruktsRBTree* tree, StruktsRBTNode* root);
+
+/**
+ * Returns the max value found in a red black tree.
+ *
+ * @param tree is a red black tree to look for its max value.
+ *
+ * @return pointer to the node with the max value of the tree. If the tree is empty,
+ * returns r.b.tree's nil node.
+ */
+StruktsRBTNode* strukts_rbtree_max(StruktsRBTree* tree, StruktsRBTNode* root);
+
+/**
+ * Deallocates all memory used by the red black tree and its nodes.
+ */
+void strukts_rbtree_free(StruktsRBTree* tree);
+
 #ifdef __cplusplus
 }
 #endif
