@@ -24,7 +24,7 @@ namespace
      *  1. red nodes are marked with ', like 04';
      *  2. nil nodes are omitted
      */
-    StruktsRBTree* build_testing_rbtree_1()
+    static StruktsRBTree* build_testing_rbtree_1()
     {
         StruktsRBTree* tree = strukts_rbtree_new();
 
@@ -41,6 +41,11 @@ namespace
         return tree;
     }
 
+    static bool is_node_with_no_children(StruktsRBTree* tree, StruktsRBTNode* node)
+    {
+        return node->left == tree->nil_node && node->right == tree->nil_node;
+    }
+
     TEST(STRUKTS_RBTREE_SUITE, SHOULD_CREATE_EMPTY_RED_BLACK_TREE)
     {
         /* act */
@@ -49,6 +54,8 @@ namespace
         /* assert */
         EXPECT_EQ(tree->root, tree->nil_node);
         EXPECT_EQ(strukts_rbtree_height(tree, tree->root), -1); /* empty tree */
+
+        strukts_rbtree_free(tree);
     }
 
     TEST(STRUKTS_RBTREE_SUITE, SHOULD_INSERT_NODES_INTO_RED_BLACK_TREE)
@@ -82,6 +89,8 @@ namespace
 
         /* assert - balanced tree: height should not be 4, should remain 3 due to rotations */
         EXPECT_EQ(strukts_rbtree_height(tree, tree->root), 3);
+
+        strukts_rbtree_free(tree);
     }
 
     TEST(STRUKTS_RBTREE_SUITE, SHOULD_DELETE_NODES_FROM_RED_BLACK_TREE)
@@ -128,5 +137,72 @@ namespace
 
         /* assert - nil node */
         EXPECT_EQ(tree->nil_node->color, Black);
+
+        strukts_rbtree_free(tree);
+    }
+
+    TEST(STRUKTS_RBTREE_SUITE, SHOULD_DELETE_MANY_NODES_FROM_RED_BLACK_TREE)
+    {
+        /* arrange */
+        StruktsRBTree* tree = build_testing_rbtree_1();
+
+        /* act */
+        strukts_rbtree_delete(tree, 7); /* deletes the root */
+        strukts_rbtree_delete(tree, 8); /* deletes the root */
+
+        /* assert */
+        EXPECT_EQ(tree->root->key, 11);
+        EXPECT_EQ(tree->root->color, Black); /* root must always be black */
+
+        EXPECT_EQ(tree->root->right->key, 14);
+        EXPECT_EQ(tree->root->right->color, Black);
+        EXPECT_EQ(tree->root->right->left, tree->nil_node);
+
+        EXPECT_EQ(tree->root->right->right->key, 15);
+        EXPECT_EQ(tree->root->right->right->color, Red);
+
+        EXPECT_TRUE(is_node_with_no_children(tree, tree->root->right->right));
+
+        /* act */
+        strukts_rbtree_delete(tree, 11); /* deletes the root */
+
+        /* assert */
+        EXPECT_EQ(tree->root->key, 14);
+        EXPECT_EQ(tree->root->color, Black);
+
+        EXPECT_EQ(tree->root->right->key, 15);
+        EXPECT_EQ(tree->root->right->color, Black);
+        EXPECT_TRUE(is_node_with_no_children(tree, tree->root->right));
+        EXPECT_EQ(strukts_rbtree_height(tree, tree->root), 3);
+
+        EXPECT_EQ(tree->root->left->right->left->key, 4);
+        EXPECT_EQ(tree->root->left->right->left->color, Red);
+        EXPECT_TRUE(is_node_with_no_children(tree, tree->root->left->right->left));
+
+        /* act */
+        strukts_rbtree_delete(tree, 4); /* deletes non-root red node */
+
+        /* assert */
+        EXPECT_EQ(strukts_rbtree_height(tree, tree->root), 2);
+
+        strukts_rbtree_free(tree);
+    }
+
+    TEST(STRUKTS_RBTREE_SUITE, SHOULD_ASSERT_MAX_MIN_OF_RED_BLACK_TREE)
+    {
+        /* arrange */
+        StruktsRBTree* tree = build_testing_rbtree_1();
+
+        /* act */
+        StruktsRBTNode* max_node = strukts_rbtree_max(tree, tree->root);
+        StruktsRBTNode* min_node = strukts_rbtree_min(tree, tree->root);
+
+        /* assert */
+        EXPECT_EQ(max_node->key, 15);
+        EXPECT_EQ(max_node->color, Red);
+        EXPECT_EQ(min_node->key, 1);
+        EXPECT_EQ(min_node->color, Black);
+
+        strukts_rbtree_free(tree);
     }
 }  // namespace
