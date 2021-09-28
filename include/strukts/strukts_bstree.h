@@ -92,7 +92,7 @@ bool strukts_bstree_insert(StruktsBSTree* tree, int key, char* value);
 /**
  * Searches for a node with a given key within the binary search tree.
  *
- * @param tree is the BSTree to search for the keye
+ * @param tree is the BSTree to search for the key
  * @param key is the key to search for in the BSTree
  *
  * @return a pointer to the node that contains the key if the key was found in the tree;

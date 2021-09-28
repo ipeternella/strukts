@@ -55,6 +55,17 @@ struct _StruktsRBTree {
 StruktsRBTree* strukts_rbtree_new();
 
 /**
+ * Searches for a node with a given key within a red black tree.
+ *
+ * @param tree is a red black tree to search for the key
+ * @param key is the key to search for in the red black tree
+ *
+ * @return a pointer to the node that contains the key if the key was found in the tree;
+ * otherwise, returns nil node.
+ */
+StruktsRBTNode* strukts_rbtree_get(StruktsRBTree* tree, int key);
+
+/**
  * Inserts a new node (red) on a red black tree. This function fixes up the
  * red black tree properties after the insertion.
  *

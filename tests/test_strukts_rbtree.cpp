@@ -93,6 +93,26 @@ namespace
         strukts_rbtree_free(tree);
     }
 
+    TEST(STRUKTS_RBTREE_SUITE, SHOULD_GET_NODE_FROM_RED_BLACK_TREE)
+    {
+        /* arrange */
+        StruktsRBTree* tree = build_testing_rbtree_1();
+
+        /* act */
+        StruktsRBTNode* node = strukts_rbtree_get(tree, 8);
+
+        /* assert - found key*/
+        EXPECT_EQ(node->key, 8);
+
+        /* act */
+        node = strukts_rbtree_get(tree, 25);
+
+        /* assert */
+        EXPECT_EQ(node, tree->nil_node);
+
+        strukts_rbtree_free(tree);
+    }
+
     TEST(STRUKTS_RBTREE_SUITE, SHOULD_DELETE_NODES_FROM_RED_BLACK_TREE)
     {
         /* arrange */
