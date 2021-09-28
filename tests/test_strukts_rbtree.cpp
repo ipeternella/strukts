@@ -7,7 +7,7 @@
 
 namespace
 {
-    /**
+    /*
      * r.b.tree-1 for testing:
      *
      *               _ 07 _
@@ -204,6 +204,55 @@ namespace
 
         /* assert */
         EXPECT_EQ(strukts_rbtree_height(tree, tree->root), 2);
+
+        /* act */
+        strukts_rbtree_delete(tree, 5);
+
+        /* assert */
+        EXPECT_EQ(tree->root->left->key, 2);
+        EXPECT_EQ(tree->root->left->color, Black);
+
+        EXPECT_EQ(tree->root->left->right, tree->nil_node);
+        EXPECT_EQ(tree->root->left->left->key, 1);
+        EXPECT_EQ(tree->root->left->left->color, Red);
+
+        EXPECT_EQ(strukts_rbtree_height(tree, tree->root), 2);
+
+        /* act */
+        strukts_rbtree_delete(tree, 1);
+
+        /* assert */
+        EXPECT_EQ(tree->root->left->key, 2);
+        EXPECT_EQ(tree->root->left->color, Black);
+        EXPECT_TRUE(is_node_with_no_children(tree, tree->root->left));
+
+        EXPECT_EQ(tree->root->right->key, 15);
+        EXPECT_EQ(tree->root->right->color, Black);
+        EXPECT_TRUE(is_node_with_no_children(tree, tree->root->right));
+
+        EXPECT_EQ(strukts_rbtree_height(tree, tree->root), 1); /* drops to height 1 */
+
+        /* act */
+        strukts_rbtree_delete(tree, 2);
+        strukts_rbtree_delete(tree, 15);
+
+        /* assert */
+        EXPECT_EQ(strukts_rbtree_height(tree, tree->root), 0);
+
+        /* act - final delete: empties the red black tree */
+        strukts_rbtree_delete(tree, 14);
+
+        /* assert */
+        EXPECT_EQ(tree->root, tree->nil_node);
+        EXPECT_EQ(tree->nil_node->color, Black);
+
+        EXPECT_EQ(strukts_rbtree_height(tree, tree->root), -1);
+
+        /* act deletes tree that doesn't exist */
+        bool rslt = strukts_rbtree_delete(tree, 25);
+
+        /* assert */
+        EXPECT_FALSE(rslt);
 
         strukts_rbtree_free(tree);
     }

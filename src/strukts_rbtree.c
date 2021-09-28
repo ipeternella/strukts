@@ -331,9 +331,9 @@ static void rbtree_delete_fix(StruktsRBTree* tree, StruktsRBTNode* node)
      * by adding the missing black node on the red black tree according to four
      * possible cases. The fixing ends when:
      *
-     * 1. One red-and-black node is found (which is turn into the missing black node);
-     * 2. One black parent is added on the top of the "missing black subtree";
-     * 3. The "blackness" is moved to the root of the tree.
+     * - One red-and-black node is found (which is turn into the missing black node);
+     * - One black parent is added on the top of the "missing black subtree";
+     * - The "blackness" is moved to the root of the tree.
      */
     while (node != tree->root && node->color == Black) {
         if (is_left_child(node)) /* node's a left child */
