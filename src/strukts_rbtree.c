@@ -141,6 +141,62 @@ static void rbtree_right_rotate(StruktsRBTree* tree, StruktsRBTNode* node)
     node->parent = pivot_node;
 }
 
+static StruktsRBTNode* rbtree_insert_fix_left(StruktsRBTree* tree, StruktsRBTNode* node)
+{
+    /* right uncle is red */
+    if (node->parent->parent->right->color == Red) {
+        /* fixes tree up to its grand parent */
+        node->parent->color = Black;                /* parent */
+        node->parent->parent->right->color = Black; /* right uncle */
+        node->parent->parent->color = Red;          /* grand parent */
+
+        /* fixes the tree up to the node's grand parent and then loop again */
+        node = node->parent->parent;
+    }
+    /* right uncle is black */
+    else {
+        /* if the uncle is black, for final right rotate, the node must be a LEFT child */
+        if (is_right_child(node)) {
+            /* move the node up for left rotation */
+            node = node->parent;
+            rbtree_left_rotate(tree, node); /* makes the node become a left child */
+        }
+        node->parent->color = Black;       /* parent becomes black, which finishes the loop */
+        node->parent->parent->color = Red; /* grand parent */
+        rbtree_right_rotate(tree, node->parent->parent); /* black parent goes one level up */
+    }
+
+    return node;
+}
+
+static StruktsRBTNode* rbtree_insert_fix_right(StruktsRBTree* tree, StruktsRBTNode* node)
+{
+    /* mirrors rbtree_insert_fix_left algorithm */
+    /* left uncle is red */
+    if (node->parent->parent->left->color == Red) {
+        node->parent->color = Black;
+        node->parent->parent->left->color = Black;
+        node->parent->parent->color = Red;
+
+        /* fixes the tree up to the node's grandparent and then loop again */
+        node = node->parent->parent;
+    }
+    /* left uncle is black */
+    else {
+        /* if the uncle is black, for final left rotate, the node must be a RIGHT child */
+        if (is_left_child(node)) {
+            /* move the node up for right rotation */
+            node = node->parent;
+            rbtree_right_rotate(tree, node); /* makes the node become a right child */
+        }
+        node->parent->color = Black; /* parent becomes black, which finishes the loop */
+        node->parent->parent->color = Red;
+        rbtree_left_rotate(tree, node->parent->parent); /* black parent goes one level up */
+    }
+
+    return node;
+}
+
 static void rbtree_insert_fix(StruktsRBTree* tree, StruktsRBTNode* node)
 {
     /*
@@ -148,56 +204,10 @@ static void rbtree_insert_fix(StruktsRBTree* tree, StruktsRBTNode* node)
      * property which says that a red parent must have two black children.
      */
     while (node->parent->color == Red) {
-        /* new node's parent is a left child */
-        if (is_left_child(node->parent)) {
-            /* right uncle is red */
-            if (node->parent->parent->right->color == Red) {
-                /* fixes tree up to its grand parent */
-                node->parent->color = Black;                /* parent */
-                node->parent->parent->right->color = Black; /* right uncle */
-                node->parent->parent->color = Red;          /* grand parent */
-
-                /* fixes the tree up to the node's grand parent and then loop again */
-                node = node->parent->parent;
-            }
-            /* right uncle is black */
-            else {
-                /* if the uncle is black, for final right rotate, the node must be a LEFT child */
-                if (is_right_child(node)) {
-                    /* move the node up for left rotation */
-                    node = node->parent;
-                    rbtree_left_rotate(tree, node); /* makes the node become a left child */
-                }
-                node->parent->color = Black; /* parent becomes black, which finishes the loop */
-                node->parent->parent->color = Red; /* grand parent */
-                rbtree_right_rotate(tree,
-                                    node->parent->parent); /* black parent goes one level up */
-            }
-        }
-        /* mirrors the algorithm above: new node's parent is a right child */
-        else {
-            /* left uncle is red */
-            if (node->parent->parent->left->color == Red) {
-                node->parent->color = Black;
-                node->parent->parent->left->color = Black;
-                node->parent->parent->color = Red;
-
-                /* fixes the tree up to the node's grandparent and then loop again */
-                node = node->parent->parent;
-            }
-            /* left uncle is black */
-            else {
-                /* if the uncle is black, for final left rotate, the node must be a RIGHT child */
-                if (is_left_child(node)) {
-                    /* move the node up for right rotation */
-                    node = node->parent;
-                    rbtree_right_rotate(tree, node); /* makes the node become a right child */
-                }
-                node->parent->color = Black; /* parent becomes black, which finishes the loop */
-                node->parent->parent->color = Red;
-                rbtree_left_rotate(tree, node->parent->parent); /* black parent goes one level up */
-            }
-        }
+        if (is_left_child(node->parent)) /* new node's parent is a left child */
+            node = rbtree_insert_fix_left(tree, node);
+        else
+            node = rbtree_insert_fix_right(tree, node);
     }
 
     /* the root and nil nodes (tree->nil) must be black in a r.b.tree */
@@ -228,89 +238,108 @@ static void rbtree_node_replace(StruktsRBTree* tree, StruktsRBTNode* old_node,
     new_node->parent = old_node->parent;
 }
 
+static StruktsRBTNode* rbtree_delete_fix_left(StruktsRBTree* tree, StruktsRBTNode* node)
+{
+    StruktsRBTNode* right_sibling = node->parent->right;
+
+    /*
+     * Case 1: sibling is RED -> just converts into case 2. In all other
+     * cases the sibling is BLACK.
+     */
+    if (right_sibling->color == Red) {
+        right_sibling->color = Black;
+        node->parent->color = Red;
+        rbtree_left_rotate(tree, node->parent);
+        right_sibling = node->parent->right;
+    }
+
+    /*
+     * Case 2: sibling's children are both BLACK. Remove black from right sibling
+     * ('red' it) and move the node up to its parent which, if it's a red node (red-n-black),
+     * then the loop ends and this node is turned black in the end which adds the missing
+     * black node to the left subtree while a red node is added to the right subtree to keep
+     * the blackness balanced.
+     */
+    if (right_sibling->left->color == Black && right_sibling->right->color == Black) {
+        right_sibling->color = Red; /* adds red node to the right subtree to balance blackness */
+        node = node->parent; /* node might become black in the end, adding the missing black node */
+    } else {
+        /*
+         * Case 3: sibling's left children is RED. Converts to case 4.
+         */
+        if (right_sibling->right->color == Black) {
+            right_sibling->left->color = Black;
+            right_sibling->color = Red;
+            rbtree_right_rotate(tree, right_sibling);
+            right_sibling = node->parent->right;
+        }
+
+        /*
+         * Case 4: sibling's right children is RED. After the rotation, node's
+         * parent becomes a black node which adds the missing black node.
+         */
+        right_sibling->color = node->parent->color;
+        node->parent->color = Black; /* readds missing black node */
+        right_sibling->right->color = Black;
+        rbtree_left_rotate(tree, node->parent);
+        node = tree->root; /* finishes the loop */
+    }
+
+    return node;
+}
+
+static StruktsRBTNode* rbtree_delete_fix_right(StruktsRBTree* tree, StruktsRBTNode* node)
+{
+    StruktsRBTNode* left_sibling = node->parent->left;
+
+    /* case 1: sibling is RED, all other cases the sibling is BLACK */
+    if (left_sibling->color == Red) {
+        left_sibling->color = Black;
+        node->parent->color = Red;
+        rbtree_right_rotate(tree, node->parent);
+        left_sibling = node->parent->left;
+    }
+
+    /* case 2 */
+    if (left_sibling->right->color == Black && left_sibling->left->color == Black) {
+        left_sibling->color = Red;
+        node = node->parent; /* becomes black in the end, adding missing black node */
+    } else {
+        /* case 3 */
+        if (left_sibling->left->color == Black) {
+            left_sibling->right->color = Black;
+            left_sibling->color = Red;
+            rbtree_left_rotate(tree, left_sibling);
+            left_sibling = node->parent->left;
+        }
+
+        /* case 4 */
+        left_sibling->color = node->parent->color;
+        node->parent->color = Black; /* readds missing black node */
+        left_sibling->left->color = Black;
+        rbtree_right_rotate(tree, node->parent);
+        node = tree->root; /* finishes the loop */
+    }
+
+    return node;
+}
+
 static void rbtree_delete_fix(StruktsRBTree* tree, StruktsRBTNode* node)
 {
-    StruktsRBTNode* right_sibling;
-    StruktsRBTNode* left_sibling;
-
+    /*
+     * Rebalances the tree by moving node's "extra blackness" to a parent node
+     * by adding the missing black node on the red black tree according to four
+     * possible cases. The fixing ends when:
+     *
+     * 1. One red-and-black node is found (which is turn into the missing black node);
+     * 2. One black parent is added on the top of the "missing black subtree";
+     * 3. The "blackness" is moved to the root of the tree.
+     */
     while (node != tree->root && node->color == Black) {
-        if (is_left_child(node)) {
-            right_sibling = node->parent->right;
-
-            /*
-             * Case 1: sibling is RED -> just converts into case 2. In all other
-             * cases the sibling is BLACK.
-             */
-            if (right_sibling->color == Red) {
-                right_sibling->color = Black;
-                node->parent->color = Red;
-                rbtree_left_rotate(tree, node->parent);
-                right_sibling = node->parent->right;
-            }
-
-            /*
-             * Case 2: sibling's children are both BLACK. Remove black from right sibling
-             * ('red' it) and move the node up to its parent which, if it's a red node,
-             * ends the loop and becomes a black node in the end of this function.
-             */
-            if (right_sibling->left->color == Black && right_sibling->right->color == Black) {
-                right_sibling->color = Red;
-                node = node->parent; /* becomes black in the end, adding missing black node */
-            } else {
-                /*
-                 * Case 3: sibling's left children is RED. Converts to case 4.
-                 */
-                if (right_sibling->right->color == Black) {
-                    right_sibling->left->color = Black;
-                    right_sibling->color = Red;
-                    rbtree_right_rotate(tree, right_sibling);
-                    right_sibling = node->parent->right;
-                }
-
-                /*
-                 * Case 4: sibling's right children is RED. After the rotation, node's
-                 * parent becomes a black node which adds the missing black node.
-                 */
-                right_sibling->color = node->parent->color;
-                node->parent->color = Black; /* readds missing black node */
-                right_sibling->right->color = Black;
-                rbtree_left_rotate(tree, node->parent);
-                node = tree->root; /* finishes the loop */
-            }
-        }
-        /* node is a right child: symmetric from above */
-        else {
-            left_sibling = node->parent->left;
-
-            /* case 1: sibling is RED, all other cases the sibling is BLACK */
-            if (left_sibling->color == Red) {
-                left_sibling->color = Black;
-                node->parent->color = Red;
-                rbtree_right_rotate(tree, node->parent);
-                left_sibling = node->parent->left;
-            }
-
-            /* case 2 */
-            if (left_sibling->right->color == Black && left_sibling->left->color == Black) {
-                left_sibling->color = Red;
-                node = node->parent; /* becomes black in the end, adding missing black node */
-            } else {
-                /* case 3 */
-                if (left_sibling->left->color == Black) {
-                    left_sibling->right->color = Black;
-                    left_sibling->color = Red;
-                    rbtree_left_rotate(tree, left_sibling);
-                    left_sibling = node->parent->left;
-                }
-
-                /* case 4 */
-                left_sibling->color = node->parent->color;
-                node->parent->color = Black; /* readds missing black node */
-                left_sibling->left->color = Black;
-                rbtree_right_rotate(tree, node->parent);
-                node = tree->root; /* finishes the loop */
-            }
-        }
+        if (is_left_child(node)) /* node's a left child */
+            node = rbtree_delete_fix_left(tree, node);
+        else
+            node = rbtree_delete_fix_right(tree, node);
     }
 
     node->color = Black;
