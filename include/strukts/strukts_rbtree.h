@@ -100,7 +100,7 @@ bool strukts_rbtree_delete(StruktsRBTree* tree, int key);
  * @return pointer to the node with the min value of the tree. If the tree is empty,
  * returns r.b.tree's nil node.
  */
-StruktsRBTNode* strukts_rbtree_min(StruktsRBTree* tree, StruktsRBTNode* root);
+StruktsRBTNode* strukts_rbtree_min(const StruktsRBTree* tree, StruktsRBTNode* root);
 
 /**
  * Returns the max value found in a red black tree.
@@ -110,7 +110,7 @@ StruktsRBTNode* strukts_rbtree_min(StruktsRBTree* tree, StruktsRBTNode* root);
  * @return pointer to the node with the max value of the tree. If the tree is empty,
  * returns r.b.tree's nil node.
  */
-StruktsRBTNode* strukts_rbtree_max(StruktsRBTree* tree, StruktsRBTNode* root);
+StruktsRBTNode* strukts_rbtree_max(const StruktsRBTree* tree, StruktsRBTNode* root);
 
 /**
  * Deallocates all memory used by the red black tree and its nodes.

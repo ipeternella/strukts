@@ -67,17 +67,17 @@ static void strukts_rbtree_node_free(StruktsRBTree* tree, StruktsRBTNode* node)
     strukts_rbtree_node_free(tree, right);
 }
 
-static inline bool is_left_child(StruktsRBTNode* node)
+static inline bool is_left_child(const StruktsRBTNode* node)
 {
     return node == node->parent->left;
 }
 
-static inline bool is_right_child(StruktsRBTNode* node)
+static inline bool is_right_child(const StruktsRBTNode* node)
 {
     return node == node->parent->right;
 }
 
-static inline bool is_tree_root(StruktsRBTree* tree, StruktsRBTNode* node)
+static inline bool is_tree_root(const StruktsRBTree* tree, const StruktsRBTNode* node)
 {
     return node == tree->root;
 }
@@ -384,7 +384,7 @@ bool strukts_rbtree_insert(StruktsRBTree* tree, int key, char* value)
     return true;
 }
 
-StruktsRBTNode* strukts_rbtree_min(StruktsRBTree* tree, StruktsRBTNode* root)
+StruktsRBTNode* strukts_rbtree_min(const StruktsRBTree* tree, StruktsRBTNode* root)
 {
     StruktsRBTNode* current_node = root;
 
@@ -395,7 +395,7 @@ StruktsRBTNode* strukts_rbtree_min(StruktsRBTree* tree, StruktsRBTNode* root)
     return current_node;
 }
 
-StruktsRBTNode* strukts_rbtree_max(StruktsRBTree* tree, StruktsRBTNode* root)
+StruktsRBTNode* strukts_rbtree_max(const StruktsRBTree* tree, StruktsRBTNode* root)
 {
     StruktsRBTNode* current_node = root;
 
